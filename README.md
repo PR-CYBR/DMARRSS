@@ -1,24 +1,22 @@
-# CATIS: Context-Aware Event Processing Model And Threat Intelligence System for Infrastructure Security
+# CATIS - Context-Aware Event Processing Model And Threat Intelligence System for Infrastructure Security
 
-CATIS is a novel solution that employs LLM-inspired architecture and neural network technology to detect and prioritize threat events in distributed systems. It focuses on highlighting only the most relevant endpoints with the highest level of threat, ensuring better-informed decision-making for security analysts and administrators.
+CATIS is a novel solution that leverages advanced algorithmical processing techniques inspired by Large Language Model (LLM) technology and neural networks to detect and prioritize threat events in distributed systems. The system highlights only relevant endpoints with the highest level of threat and enables security analysts and administrators to make better-informed decisions, respond more effectively to threats, and maintain a higher level of security across their distributed infrastructure systems.
 
 ## Features
-
-- Context-aware event processing for accurate threat detection
-- Integration of Context Aware Event Severity Layers for prioritizing events
-- Advanced algorithmical processing techniques inspired by LLM technology
+- LLM-inspired architecture
+- Context-sensitive mechanisms for accurate threat event understanding
+- Context Aware Event Severity Layers for prioritizing events
 - Fine-tuning on domain-specific cybersecurity datasets
 - Compatible with existing security tools like SNORT and SURICATA/ZEEK
-- Visualizations for customized logs
 
-## Getting Started
+## Installation
+_TODO: Add installation instructions_
 
-[Instructions on installation, dependencies, and usage]
+## Usage
+_TODO: Add usage instructions_
 
 ## Contributing
-
-[Guidelines for contributing to the project]
+_TODO: Add contributing guidelines_
 
 ## License
-
-[License information]
+_TODO: Specify the license_
