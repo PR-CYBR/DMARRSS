@@ -1,8 +1,8 @@
-# CATIS - Context-Aware Event Processing Model And Threat Intelligence System for Infrastructure Security
+# DMARRSS - DECENTRALIZED MACHINE ASSISTED RAPID RESPONSE SECURITY SYSTEM
 
-![alt text](src/assets/diagram.png "CATIS Architecture Diagram")
+![alt text](src/assets/diagram.png)
 
-CATIS is a novel solution that leverages advanced algorithmical processing techniques inspired by Large Language Model (LLM) technology and neural networks to detect and prioritize threat events in distributed systems. The system highlights only relevant endpoints with the highest level of threat and enables security analysts and administrators to make better-informed decisions, respond more effectively to threats, and maintain a higher level of security across their distributed infrastructure systems.
+DMARRSS is a novel solution that leverages advanced algorithmical processing techniques inspired by Large Language Model (LLM) technology and neural networks to detect and prioritize threat events in distributed systems. The system highlights only relevant endpoints with the highest level of threat and enables security analysts and administrators to make better-informed decisions, respond more effectively to threats, and maintain a higher level of security across their distributed infrastructure systems.
 
 ## Features
 - LLM-inspired architecture

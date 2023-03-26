@@ -1,4 +1,4 @@
-# CATIS Roadmap
+# DMARRSS Roadmap
 
 Here is a high-level project roadmap with milestones and estimated timelines:
 
@@ -22,7 +22,7 @@ Here is a high-level project roadmap with milestones and estimated timelines:
 
 - [ ] [3.1](https://github.com/orgs/folkvarlabs/projects/5?pane=issue&itemId=23920362). Develop scripts for combining Context Aware Event Severity Layers and Numerically Augmented Data Source, and verify their effectiveness.
 
-- [ ] [3.2](https://github.com/orgs/folkvarlabs/projects/5?pane=issue&itemId=23920362). Complete the integration of the CATIS system with existing security tools like SNORT and SURICATA/ZEEK.
+- [ ] [3.2](https://github.com/orgs/folkvarlabs/projects/5?pane=issue&itemId=23920362). Complete the integration of the DMARRSS system with existing security tools like SNORT and SURICATA/ZEEK.
 
 - [ ] [3.3](https://github.com/orgs/folkvarlabs/projects/5?pane=issue&itemId=23920362). Evaluate the system's performance using standard metrics and confirm satisfactory results.
 
@@ -32,7 +32,7 @@ Here is a high-level project roadmap with milestones and estimated timelines:
 
 - [ ] [4.2](https://github.com/orgs/folkvarlabs/projects/5/views/1?pane=issue&itemId=23921066). Implement the frontend with support for different log formats and customization options.
 
-- [ ] [4.3](https://github.com/orgs/folkvarlabs/projects/5/views/1?pane=issue&itemId=23921066). Test the frontend to ensure seamless integration with the CATIS system and reliable performance.
+- [ ] [4.3](https://github.com/orgs/folkvarlabs/projects/5/views/1?pane=issue&itemId=23921066). Test the frontend to ensure seamless integration with the DMARRSS system and reliable performance.
 
 5. **Testing and Validation** (1-2 weeks)
 
@@ -48,7 +48,7 @@ Here is a high-level project roadmap with milestones and estimated timelines:
 
 - [ ] [6.2](https://github.com/orgs/folkvarlabs/projects/5/views/1?pane=issue&itemId=23920379). Package the system for deployment, ensuring compatibility with the target infrastructure.
 
-- [ ] [6.3](https://github.com/orgs/folkvarlabs/projects/5/views/1?pane=issue&itemId=23920379). Successfully deploy the CATIS system and confirm smooth operation in the target environment.
+- [ ] [6.3](https://github.com/orgs/folkvarlabs/projects/5/views/1?pane=issue&itemId=23920379). Successfully deploy the DMARRSS system and confirm smooth operation in the target environment.
 
 7. **Maintenance and Updates** (Ongoing)
 
