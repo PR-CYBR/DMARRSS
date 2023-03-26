@@ -1,5 +1,7 @@
 # CATIS - Context-Aware Event Processing Model And Threat Intelligence System for Infrastructure Security
 
+![alt text](src/assets/diagram.png "CATIS Architecture Diagram")
+
 CATIS is a novel solution that leverages advanced algorithmical processing techniques inspired by Large Language Model (LLM) technology and neural networks to detect and prioritize threat events in distributed systems. The system highlights only relevant endpoints with the highest level of threat and enables security analysts and administrators to make better-informed decisions, respond more effectively to threats, and maintain a higher level of security across their distributed infrastructure systems.
 
 ## Features
