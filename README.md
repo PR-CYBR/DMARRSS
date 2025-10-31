@@ -14,6 +14,17 @@ DMARRSS is an advanced threat detection and response system that leverages **LLM
 - **Modular Architecture**: Clean, extensible design with separate components for parsing, scoring, classification, and response
 - **Real-time Processing**: High-performance pipeline capable of processing thousands of events per second
 
+## 🗺️ Live Codebase Mindmap
+
+Auto-generated on each push: **repo-map.html** (via GitHub Pages and CI artifact).
+
+When Pages is enabled, it will be served at: `https://<owner>.github.io/<repo>/repo-map.html`
+
+The mindmap provides an interactive visualization of the entire codebase structure, including:
+- Language distribution and file statistics
+- Directory hierarchy with expandable/collapsible nodes
+- Quick navigation to understand project organization
+
 ## 🏗️ Architecture
 
 DMARRSS implements a multi-stage pipeline that transforms raw security logs into actionable threat intelligence:
