@@ -10,11 +10,8 @@ Runs continuous log processing pipeline with:
 """
 
 import logging
-import os
 import sys
-import time
 from pathlib import Path
-from typing import Dict, List
 
 from .actions import BlockIPAction, IsolateHostAction, NotifyWebhookAction
 from .decide.decision_node import DecisionNode
@@ -39,7 +36,7 @@ class DMADaemon:
     Manages continuous processing of security events.
     """
 
-    def __init__(self, config: Dict):
+    def __init__(self, config: dict):
         """Initialize daemon with config"""
         self.config = config
         self.running = False
@@ -208,7 +205,7 @@ class DMADaemon:
             logger.info("Daemon stopped")
 
 
-def run_daemon(config: Dict):
+def run_daemon(config: dict):
     """
     Run DMARRSS daemon.
 

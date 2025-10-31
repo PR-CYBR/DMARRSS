@@ -5,7 +5,6 @@ Parses ZEEK tab-separated value logs with #fields headers to canonical Event sch
 """
 
 from datetime import datetime
-from typing import Dict, List, Optional
 
 from ..schemas import Event, LogSource
 
@@ -20,7 +19,7 @@ class ZeekParser:
     """
 
     def __init__(self):
-        self.fields: Optional[List[str]] = None
+        self.fields: list[str] | None = None
 
     def set_fields(self, header_line: str) -> None:
         """
@@ -32,7 +31,7 @@ class ZeekParser:
             parts = header_line.strip().split("\t")
             self.fields = [f.strip() for f in parts[1:]]  # Skip "#fields"
 
-    def parse(self, log_line: str, fields: Optional[List[str]] = None) -> Optional[Event]:
+    def parse(self, log_line: str, fields: list[str] | None = None) -> Event | None:
         """
         Parse a single ZEEK TSV line into an Event.
 
@@ -58,7 +57,7 @@ class ZeekParser:
                 values.extend([""] * (len(field_names) - len(values)))
 
             # Create field->value mapping
-            data: Dict[str, str] = dict(zip(field_names, values))
+            data: dict[str, str] = dict(zip(field_names, values))
 
             # Extract timestamp (ZEEK uses Unix epoch)
             ts_str = data.get("ts", "")
@@ -123,7 +122,7 @@ class ZeekParser:
         except Exception:
             return None
 
-    def parse_batch(self, log_lines: List[str]) -> List[Event]:
+    def parse_batch(self, log_lines: list[str]) -> list[Event]:
         """
         Parse multiple ZEEK lines, handling #fields header automatically.
 

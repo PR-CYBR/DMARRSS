@@ -10,10 +10,9 @@ Implements config-driven composite threat scoring with:
 """
 
 import ipaddress
-import os
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 from ..schemas import Event, ThreatScoreComponents
 from ..store import Store
@@ -31,7 +30,7 @@ class ThreatScorer:
     5. Anomaly score - frequency-based z-score
     """
 
-    def __init__(self, config: Dict[str, Any], store: Optional[Store] = None):
+    def __init__(self, config: dict[str, Any], store: Store | None = None):
         """Initialize scorer with config and optional store"""
         self.config = config
         self.store = store
@@ -45,14 +44,14 @@ class ThreatScorer:
         self.reputation_csv_path = scoring_config.get("reputation_csv", "")
 
         # Load reputation data
-        self.reputation_map: Dict[str, float] = {}
+        self.reputation_map: dict[str, float] = {}
         self._load_reputation()
 
         # Threat patterns for pattern matching
         self._init_threat_patterns()
 
         # Frequency tracking for anomaly detection
-        self.event_counts: Dict[str, int] = {}
+        self.event_counts: dict[str, int] = {}
         self.last_reset = datetime.utcnow()
 
     def _init_threat_patterns(self) -> None:

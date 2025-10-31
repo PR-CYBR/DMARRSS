@@ -4,12 +4,10 @@ Notify webhook action plugin.
 Sends alert notifications via webhook or stdout.
 """
 
-import json
 import os
-from typing import Optional
 
-from .base import BaseAction
 from ..schemas import ActionResult, Decision
+from .base import BaseAction
 
 
 class NotifyWebhookAction(BaseAction):
@@ -24,7 +22,7 @@ class NotifyWebhookAction(BaseAction):
         super().__init__("notify_webhook")
         self.webhook_url = os.environ.get("DMARRSS_WEBHOOK_URL", "")
 
-    def _send_webhook(self, decision: Decision) -> tuple[bool, Optional[str]]:
+    def _send_webhook(self, decision: Decision) -> tuple[bool, str | None]:
         """Send notification to webhook"""
         if not self.webhook_url:
             return False, "No webhook URL configured"

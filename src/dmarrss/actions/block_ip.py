@@ -8,10 +8,9 @@ Supports Linux (nft/iptables), Mac (pfctl), Windows (netsh).
 import os
 import platform
 import subprocess
-from typing import Dict
 
-from .base import BaseAction
 from ..schemas import ActionResult, Decision
+from .base import BaseAction
 
 
 class BlockIPAction(BaseAction):
@@ -41,9 +40,7 @@ class BlockIPAction(BaseAction):
         """Block IP using nftables on Linux"""
         try:
             # Check if nft is available
-            result = subprocess.run(
-                ["which", "nft"], capture_output=True, text=True, timeout=5
-            )
+            result = subprocess.run(["which", "nft"], capture_output=True, text=True, timeout=5)
             if result.returncode != 0:
                 return self._block_linux_iptables(ip)
 
@@ -124,7 +121,7 @@ class BlockIPAction(BaseAction):
 
         # Execute platform-specific block
         success = False
-        details: Dict = {"platform": self.platform, "ip": src_ip}
+        details: dict = {"platform": self.platform, "ip": src_ip}
 
         if self.platform == "linux":
             success = self._block_linux_nft(src_ip)

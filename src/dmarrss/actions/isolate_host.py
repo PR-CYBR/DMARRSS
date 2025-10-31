@@ -9,8 +9,8 @@ import os
 import platform
 import subprocess
 
-from .base import BaseAction
 from ..schemas import ActionResult, Decision
+from .base import BaseAction
 
 
 class IsolateHostAction(BaseAction):

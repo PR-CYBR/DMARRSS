@@ -5,11 +5,9 @@ Combines threat scoring and neural classification to make severity decisions.
 """
 
 import uuid
-from datetime import datetime
-from typing import Dict, List
 
 from ..models.inference import ThreatInference
-from ..schemas import Decision, Event, Severity, ThreatScoreComponents
+from ..schemas import Decision, Event, Severity
 from ..scoring.threat_scorer import ThreatScorer
 
 
@@ -22,7 +20,7 @@ class DecisionNode:
 
     def __init__(
         self,
-        config: Dict,
+        config: dict,
         scorer: ThreatScorer,
         inference: ThreatInference,
     ):
@@ -125,6 +123,6 @@ class DecisionNode:
 
         return decision
 
-    def decide_batch(self, events: List[Event]) -> List[Decision]:
+    def decide_batch(self, events: list[Event]) -> list[Decision]:
         """Make decisions for a batch of events"""
         return [self.decide(event) for event in events]

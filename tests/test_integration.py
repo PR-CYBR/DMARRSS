@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import yaml
 
-from dmarrss.actions import BlockIPAction, NotifyWebhookAction
+from dmarrss.actions import NotifyWebhookAction
 from dmarrss.decide.decision_node import DecisionNode
 from dmarrss.models.inference import ThreatInference
 from dmarrss.parsers import SnortParser

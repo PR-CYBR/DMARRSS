@@ -6,7 +6,6 @@ Simple MLP for tabular threat features with PyTorch.
 
 import torch
 import torch.nn as nn
-from typing import List
 
 
 class ThreatClassifierMLP(nn.Module):
@@ -19,7 +18,7 @@ class ThreatClassifierMLP(nn.Module):
     def __init__(
         self,
         input_dim: int = 10,
-        hidden_layers: List[int] = [256, 128, 64],
+        hidden_layers: list[int] = [256, 128, 64],
         num_classes: int = 4,
         dropout_rate: float = 0.3,
     ):

@@ -3,13 +3,12 @@ Model inference for real-time threat classification.
 """
 
 import json
-import torch
-from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional, Tuple
 
-from .neural import ThreatClassifierMLP, create_model
+import torch
+
 from ..schemas import Event, Severity, ThreatScoreComponents
+from .neural import ThreatClassifierMLP, create_model
 
 
 class ThreatInference:
@@ -22,8 +21,8 @@ class ThreatInference:
     def __init__(self, model_dir: str = "data/models"):
         """Initialize inference engine"""
         self.model_dir = Path(model_dir)
-        self.model: Optional[ThreatClassifierMLP] = None
-        self.metadata: Optional[Dict] = None
+        self.model: ThreatClassifierMLP | None = None
+        self.metadata: dict | None = None
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         # Severity mapping
@@ -106,7 +105,7 @@ class ThreatInference:
 
     def predict(
         self, event: Event, score_components: ThreatScoreComponents
-    ) -> Tuple[Severity, float]:
+    ) -> tuple[Severity, float]:
         """
         Predict severity class and confidence for an event.
 
@@ -174,6 +173,6 @@ class ThreatInference:
         """Check if model is loaded"""
         return self.model is not None
 
-    def get_metadata(self) -> Optional[Dict]:
+    def get_metadata(self) -> dict | None:
         """Get model metadata"""
         return self.metadata

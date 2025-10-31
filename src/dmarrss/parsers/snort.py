@@ -6,7 +6,6 @@ Parses SNORT fast alert format to canonical Event schema.
 
 import re
 from datetime import datetime
-from typing import Optional
 
 from ..schemas import Event, LogSource
 
@@ -34,7 +33,7 @@ class SnortParser:
             r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d{1,5}))?"
         )
 
-    def parse(self, log_line: str) -> Optional[Event]:
+    def parse(self, log_line: str) -> Event | None:
         """
         Parse a single SNORT alert line into an Event.
 

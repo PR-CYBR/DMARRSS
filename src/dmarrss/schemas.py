@@ -4,7 +4,7 @@ Core data schemas for DMARRSS using Pydantic for validation and serialization.
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -36,27 +36,27 @@ class Event(BaseModel):
     # Metadata
     source: LogSource
     ts: datetime
-    event_id: Optional[str] = None
+    event_id: str | None = None
 
     # Network information
     src_ip: str
-    src_port: Optional[int] = None
+    src_port: int | None = None
     dst_ip: str
-    dst_port: Optional[int] = None
-    proto: Optional[str] = None
+    dst_port: int | None = None
+    proto: str | None = None
 
     # Threat information
-    category: Optional[str] = None
-    signature: Optional[str] = None
-    severity_hint: Optional[str] = None
+    category: str | None = None
+    signature: str | None = None
+    severity_hint: str | None = None
 
     # Raw data and metadata
-    raw: Union[Dict[str, Any], str] = Field(default_factory=dict)
-    tags: List[str] = Field(default_factory=list)
+    raw: dict[str, Any] | str = Field(default_factory=dict)
+    tags: list[str] = Field(default_factory=list)
 
     # Computed fields (set during processing)
-    threat_score: Optional[float] = None
-    severity: Optional[Severity] = None
+    threat_score: float | None = None
+    severity: Severity | None = None
 
     @field_validator("ts", mode="before")
     @classmethod
@@ -96,16 +96,16 @@ class Decision(BaseModel):
 
     # Rationale and scoring components
     threat_score: float = Field(ge=0.0, le=1.0)
-    score_components: Dict[str, float] = Field(default_factory=dict)
-    neural_prediction: Optional[str] = None
-    neural_confidence: Optional[float] = None
+    score_components: dict[str, float] = Field(default_factory=dict)
+    neural_prediction: str | None = None
+    neural_confidence: float | None = None
 
     # Decision reasoning
     why: str = ""
-    weights: Dict[str, float] = Field(default_factory=dict)
+    weights: dict[str, float] = Field(default_factory=dict)
 
     # Response policy
-    recommended_actions: List[str] = Field(default_factory=list)
+    recommended_actions: list[str] = Field(default_factory=list)
 
     class Config:
         use_enum_values = True
@@ -128,8 +128,8 @@ class ActionResult(BaseModel):
 
     # Details
     message: str = ""
-    details: Dict[str, Any] = Field(default_factory=dict)
-    error: Optional[str] = None
+    details: dict[str, Any] = Field(default_factory=dict)
+    error: str | None = None
 
     class Config:
         use_enum_values = True
@@ -152,9 +152,9 @@ class ModelMetadata(BaseModel):
     trained_at: datetime
     training_samples: int
     validation_accuracy: float
-    features: List[str]
-    architecture: Dict[str, Any] = Field(default_factory=dict)
-    hyperparameters: Dict[str, Any] = Field(default_factory=dict)
+    features: list[str]
+    architecture: dict[str, Any] = Field(default_factory=dict)
+    hyperparameters: dict[str, Any] = Field(default_factory=dict)
 
     class Config:
         json_encoders = {datetime: lambda v: v.isoformat()}

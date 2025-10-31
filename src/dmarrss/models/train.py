@@ -5,16 +5,13 @@ Trains MLP on historical events from parquet files.
 """
 
 import json
-import os
-import torch
-import torch.nn as nn
-import torch.optim as optim
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional
 
-from .neural import create_model
+import torch
+
 from ..schemas import ModelMetadata
+from .neural import create_model
 
 
 class ThreatModelTrainer:
@@ -26,7 +23,7 @@ class ThreatModelTrainer:
 
     def __init__(
         self,
-        config: Dict,
+        config: dict,
         data_dir: str = "data/training",
         model_dir: str = "data/models",
     ):
@@ -50,7 +47,7 @@ class ThreatModelTrainer:
         - Training data is newer than model
         """
         model_path = self.model_dir / "model.pt"
-        manifest_path = self.model_dir / "manifest.json"
+        self.model_dir / "manifest.json"
 
         if not model_path.exists():
             return True
@@ -162,7 +159,7 @@ class ThreatModelTrainer:
         print(f"Manifest saved to {manifest_path}")
 
 
-def train_model(config: Dict, force: bool = False) -> bool:
+def train_model(config: dict, force: bool = False) -> bool:
     """
     Train threat classification model.
 

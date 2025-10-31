@@ -11,9 +11,8 @@ Provides HTTP endpoints for:
 
 import json
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import yaml
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
@@ -22,7 +21,7 @@ from . import __version__
 from .decide.decision_node import DecisionNode
 from .models.inference import ThreatInference
 from .parsers import SnortParser, SuricataParser, ZeekParser
-from .schemas import Decision, Event, Severity
+from .schemas import Decision
 from .scoring.threat_scorer import ThreatScorer
 from .store import Store
 
@@ -33,18 +32,12 @@ try:
     METRICS_AVAILABLE = True
 
     # Define metrics
-    events_ingested = Counter(
-        "dmarrss_events_ingested_total", "Total events ingested", ["source"]
-    )
-    decisions_made = Counter(
-        "dmarrss_decisions_total", "Total decisions made", ["severity"]
-    )
+    events_ingested = Counter("dmarrss_events_ingested_total", "Total events ingested", ["source"])
+    decisions_made = Counter("dmarrss_decisions_total", "Total decisions made", ["severity"])
     actions_executed = Counter(
         "dmarrss_actions_total", "Total actions executed", ["action_name", "dry_run"]
     )
-    processing_time = Histogram(
-        "dmarrss_processing_seconds", "Event processing time", ["stage"]
-    )
+    processing_time = Histogram("dmarrss_processing_seconds", "Event processing time", ["stage"])
     active_events = Gauge("dmarrss_active_events", "Currently active events")
 
 except ImportError:
@@ -62,7 +55,7 @@ class EventIngestBatchRequest(BaseModel):
     """Request body for batch event ingestion"""
 
     source: str
-    log_lines: List[str]
+    log_lines: list[str]
 
 
 class ActionTestRequest(BaseModel):
@@ -73,7 +66,7 @@ class ActionTestRequest(BaseModel):
     dry_run: bool = True
 
 
-def create_app(config: Dict[str, Any]) -> FastAPI:
+def create_app(config: dict[str, Any]) -> FastAPI:
     """
     Create FastAPI application with DMARRSS endpoints.
 
@@ -132,7 +125,7 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
         }
 
     @app.post("/ingest")
-    async def ingest_event(request: EventIngestRequest) -> Dict[str, Any]:
+    async def ingest_event(request: EventIngestRequest) -> dict[str, Any]:
         """
         Ingest a single event for processing.
 
@@ -140,9 +133,7 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
         """
         source = request.source.upper()
         if source not in parsers:
-            raise HTTPException(
-                status_code=400, detail=f"Unsupported source: {request.source}"
-            )
+            raise HTTPException(status_code=400, detail=f"Unsupported source: {request.source}")
 
         # Parse event
         parser = parsers[source]
@@ -178,7 +169,7 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
         }
 
     @app.post("/ingest/batch")
-    async def ingest_batch(request: EventIngestBatchRequest) -> Dict[str, Any]:
+    async def ingest_batch(request: EventIngestBatchRequest) -> dict[str, Any]:
         """
         Ingest multiple events for batch processing.
 
@@ -186,9 +177,7 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
         """
         source = request.source.upper()
         if source not in parsers:
-            raise HTTPException(
-                status_code=400, detail=f"Unsupported source: {request.source}"
-            )
+            raise HTTPException(status_code=400, detail=f"Unsupported source: {request.source}")
 
         parser = parsers[source]
         events = []
@@ -239,8 +228,8 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
     @app.get("/events")
     async def get_events(
         limit: int = Query(100, ge=1, le=1000),
-        severity: Optional[str] = Query(None),
-        since: Optional[str] = Query(None),
+        severity: str | None = Query(None),
+        since: str | None = Query(None),
     ):
         """
         Query events with filters.

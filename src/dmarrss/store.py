@@ -4,12 +4,12 @@ SQLite storage layer for DMARRSS.
 Manages persistent state for events, decisions, actions, and statistics.
 """
 
-import json
 import sqlite3
+from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any
 
 from .schemas import ActionResult, Decision, Event
 
@@ -27,13 +27,13 @@ class Store:
         # Only create directories for file-based databases
         if db_path != ":memory:":
             Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-        
+
         # For in-memory databases, keep a persistent connection
         self._conn = None
         if db_path == ":memory:":
             self._conn = sqlite3.connect(":memory:")
             self._conn.row_factory = sqlite3.Row
-        
+
         self._init_schema()
 
     @contextmanager
@@ -44,7 +44,7 @@ class Store:
             yield self._conn
             self._conn.commit()
             return
-        
+
         # Create new connection for file-based DBs
         conn = sqlite3.connect(str(self.db_path))
         conn.row_factory = sqlite3.Row
@@ -186,13 +186,13 @@ class Store:
     def get_events(
         self,
         limit: int = 100,
-        severity: Optional[str] = None,
-        since: Optional[datetime] = None,
-    ) -> List[Dict[str, Any]]:
+        severity: str | None = None,
+        since: datetime | None = None,
+    ) -> list[dict[str, Any]]:
         """Query events with filters"""
         with self._get_conn() as conn:
             query = "SELECT * FROM events WHERE 1=1"
-            params: List[Any] = []
+            params: list[Any] = []
 
             if severity:
                 query += " AND severity = ?"
@@ -208,12 +208,10 @@ class Store:
             cursor = conn.execute(query, params)
             return [dict(row) for row in cursor.fetchall()]
 
-    def get_decision(self, decision_id: str) -> Optional[Dict[str, Any]]:
+    def get_decision(self, decision_id: str) -> dict[str, Any] | None:
         """Get a decision by ID"""
         with self._get_conn() as conn:
-            cursor = conn.execute(
-                "SELECT * FROM decisions WHERE decision_id = ?", (decision_id,)
-            )
+            cursor = conn.execute("SELECT * FROM decisions WHERE decision_id = ?", (decision_id,))
             row = cursor.fetchone()
             return dict(row) if row else None
 
@@ -228,7 +226,7 @@ class Store:
                 (key, value),
             )
 
-    def get_stat(self, key: str) -> Optional[float]:
+    def get_stat(self, key: str) -> float | None:
         """Get a statistic value"""
         with self._get_conn() as conn:
             cursor = conn.execute("SELECT stat_value FROM stats WHERE stat_key = ?", (key,))
@@ -246,12 +244,10 @@ class Store:
                 (file_path, inode, offset),
             )
 
-    def get_file_position(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def get_file_position(self, file_path: str) -> dict[str, Any] | None:
         """Get file position for log tailer"""
         with self._get_conn() as conn:
-            cursor = conn.execute(
-                "SELECT * FROM file_positions WHERE file_path = ?", (file_path,)
-            )
+            cursor = conn.execute("SELECT * FROM file_positions WHERE file_path = ?", (file_path,))
             row = cursor.fetchone()
             return dict(row) if row else None
 

@@ -4,7 +4,6 @@ Base action interface for DMARRSS response plugins.
 
 import uuid
 from abc import ABC, abstractmethod
-from datetime import datetime
 from typing import Protocol
 
 from ..schemas import ActionResult, Decision
