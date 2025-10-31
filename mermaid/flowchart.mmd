@@ -24,9 +24,11 @@ f_LICENSE["LICENSE"]
 d_logs["logs/"]:::dir
 f_logs_README_md["README.md"]
 d_mermaid["mermaid/"]:::dir
+f_mermaid_architecture_mmd["architecture.mmd"]
 f_mermaid_bpmnish_mmd["bpmnish.mmd"]
 f_mermaid_ci_sequence_mmd["ci-sequence.mmd"]
 f_mermaid_er_mmd["er.mmd"]
+f_mermaid_flowchart_mmd["flowchart.mmd"]
 f_README_md["README.md"]
 f_requirements_txt["requirements.txt"]
 d_scripts["scripts/"]:::dir
@@ -84,9 +86,11 @@ d__ --> f_LICENSE
 d__ --> d_logs
 d_logs --> f_logs_README_md
 d__ --> d_mermaid
+d_mermaid --> f_mermaid_architecture_mmd
 d_mermaid --> f_mermaid_bpmnish_mmd
 d_mermaid --> f_mermaid_ci_sequence_mmd
 d_mermaid --> f_mermaid_er_mmd
+d_mermaid --> f_mermaid_flowchart_mmd
 d__ --> f_README_md
 d__ --> f_requirements_txt
 d__ --> d_scripts
