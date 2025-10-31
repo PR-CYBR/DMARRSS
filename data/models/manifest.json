@@ -1,0 +1,39 @@
+{
+  "model_version": "1.0.0-untrained",
+  "trained_at": "2025-10-31 01:51:48.269671",
+  "training_samples": 0,
+  "validation_accuracy": 0.0,
+  "features": [
+    "pattern_match",
+    "context_relevance",
+    "historical_severity",
+    "source_reputation",
+    "anomaly_score",
+    "src_port",
+    "dst_port",
+    "proto",
+    "hour",
+    "day_of_week"
+  ],
+  "architecture": {
+    "type": "MLP",
+    "input_dim": 10,
+    "hidden_layers": [
+      256,
+      128,
+      64
+    ],
+    "num_classes": 4
+  },
+  "hyperparameters": {
+    "embedding_dim": 128,
+    "hidden_layers": [
+      256,
+      128,
+      64
+    ],
+    "dropout_rate": 0.3,
+    "learning_rate": 0.001,
+    "batch_size": 32
+  }
+}
