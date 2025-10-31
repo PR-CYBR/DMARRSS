@@ -111,6 +111,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Clean up space before build
+      run: |
+        echo "Disk space before cleanup:"
+        df -h
+        echo "Cleaning up Docker resources..."
+        docker system prune -af --volumes || true
+        echo "Removing large preinstalled tools..."
+        sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup || true
+        echo "Disk space after cleanup:"
+        df -h
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
@@ -123,3 +134,10 @@ jobs:
         tags: dmarrss:test
         cache-from: type=gha
         cache-to: type=gha,mode=max
+
+    - name: Clean up after build
+      if: always()
+      run: |
+        docker system prune -af --volumes || true
+        echo "Disk space after build:"
+        df -h
