@@ -1,0 +1,84 @@
+# DMARRSS Configuration File
+system:
+  name: "DMARRSS"
+  version: "1.0.0"
+  mode: "decentralized"  # Options: centralized_cloud, centralized_onprem, decentralized
+
+# Severity thresholds for Context Aware Event Severity Layers
+severity_layers:
+  layer1:  # Primary context layer
+    critical: 0.9
+    high: 0.7
+    medium: 0.5
+    low: 0.3
+  
+  layer2:  # Secondary risk layer
+    critical: 0.85
+    high: 0.65
+    medium: 0.45
+    low: 0.25
+
+# Threat scoring weights
+scoring_weights:
+  pattern_match: 0.3
+  context_relevance: 0.25
+  historical_severity: 0.2
+  source_reputation: 0.15
+  anomaly_score: 0.1
+
+# Log source configurations
+log_sources:
+  snort:
+    enabled: true
+    format: "snort"
+    priority_weight: 1.0
+  
+  suricata:
+    enabled: true
+    format: "suricata"
+    priority_weight: 1.0
+  
+  zeek:
+    enabled: true
+    format: "zeek"
+    priority_weight: 0.9
+
+# Response actions based on severity
+response_actions:
+  critical:
+    action: "automated_response"
+    notify: true
+    block: true
+    escalate: true
+  
+  high:
+    action: "analyst_review"
+    notify: true
+    block: false
+    escalate: true
+  
+  medium:
+    action: "queue_reassessment"
+    notify: false
+    block: false
+    escalate: false
+  
+  low:
+    action: "log_monitor"
+    notify: false
+    block: false
+    escalate: false
+
+# Neural network configuration for LLM-inspired processing
+neural_config:
+  embedding_dim: 128
+  hidden_layers: [256, 128, 64]
+  dropout_rate: 0.3
+  learning_rate: 0.001
+  batch_size: 32
+
+# Logging configuration
+logging:
+  level: "INFO"
+  file: "logs/dmarrss.log"
+  format: "json"
