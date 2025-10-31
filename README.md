@@ -87,11 +87,11 @@ graph TD
 
 ```bash
 # Clone the repository
-git clone https://github.com/folkvarlabs/DMARRSS.git
+git clone https://github.com/PR-CYBR/DMARRSS.git
 cd DMARRSS
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -e ".[dev]"
 
 # Run the demo
 python3 scripts/demo.py
