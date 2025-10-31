@@ -135,7 +135,7 @@ class DMADaemon:
 
                     # Log decision
                     logger.info(
-                        f"Event {event.event_id}: {event.severity.value} "
+                        f"Event {event.event_id}: {event.severity} "
                         f"(score={decision.threat_score:.3f}, "
                         f"confidence={decision.confidence:.3f})"
                     )

@@ -35,7 +35,7 @@ class NotifyWebhookAction(BaseAction):
             payload = {
                 "decision_id": decision.decision_id,
                 "event_id": decision.event_id,
-                "severity": decision.severity.value,
+                "severity": decision.severity,
                 "confidence": decision.confidence,
                 "threat_score": decision.threat_score,
                 "timestamp": decision.timestamp.isoformat(),
@@ -64,7 +64,7 @@ class NotifyWebhookAction(BaseAction):
         print("=" * 60)
         print(f"Decision ID: {decision.decision_id}")
         print(f"Event ID: {decision.event_id}")
-        print(f"Severity: {decision.severity.value}")
+        print(f"Severity: {decision.severity}")
         print(f"Confidence: {decision.confidence:.3f}")
         print(f"Threat Score: {decision.threat_score:.3f}")
         print(f"Timestamp: {decision.timestamp}")

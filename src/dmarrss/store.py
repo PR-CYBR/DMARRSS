@@ -23,13 +23,29 @@ class Store:
 
     def __init__(self, db_path: str = "data/state/dmarrss.db"):
         """Initialize store and create schema if needed"""
-        self.db_path = Path(db_path)
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self.db_path = db_path
+        # Only create directories for file-based databases
+        if db_path != ":memory:":
+            Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        
+        # For in-memory databases, keep a persistent connection
+        self._conn = None
+        if db_path == ":memory:":
+            self._conn = sqlite3.connect(":memory:")
+            self._conn.row_factory = sqlite3.Row
+        
         self._init_schema()
 
     @contextmanager
     def _get_conn(self) -> Iterator[sqlite3.Connection]:
         """Context manager for database connections"""
+        # Use persistent connection for in-memory DBs
+        if self._conn:
+            yield self._conn
+            self._conn.commit()
+            return
+        
+        # Create new connection for file-based DBs
         conn = sqlite3.connect(str(self.db_path))
         conn.row_factory = sqlite3.Row
         try:
@@ -116,12 +132,12 @@ class Store:
                 """,
                 (
                     event.event_id or f"{event.source}_{event.ts.timestamp()}",
-                    event.source.value,
+                    event.source,
                     event.ts.timestamp(),
                     event.src_ip,
                     event.dst_ip,
                     event.threat_score,
-                    event.severity.value if event.severity else None,
+                    event.severity if event.severity else None,
                     event.model_dump_json(),
                 ),
             )
@@ -138,7 +154,7 @@ class Store:
                 (
                     decision.decision_id,
                     decision.event_id,
-                    decision.severity.value,
+                    decision.severity,
                     decision.confidence,
                     decision.threat_score,
                     decision.timestamp.timestamp(),

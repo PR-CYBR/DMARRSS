@@ -100,7 +100,7 @@ class DecisionNode:
             why = "Threshold-based severity classification"
 
         # Step 6: Determine recommended actions
-        recommended_actions = self.responses.get(final_severity.value, [])
+        recommended_actions = self.responses.get(final_severity, [])
 
         # Create decision
         decision = Decision(
@@ -116,7 +116,7 @@ class DecisionNode:
                 "source_reputation": score_components.source_reputation,
                 "anomaly_score": score_components.anomaly_score,
             },
-            neural_prediction=neural_severity.value,
+            neural_prediction=neural_severity,
             neural_confidence=neural_confidence,
             why=why,
             weights=self.scorer.weights,

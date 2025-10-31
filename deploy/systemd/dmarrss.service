@@ -1,0 +1,27 @@
+[Unit]
+Description=DMARRSS - Decentralized Machine Assisted Rapid Response Security System
+After=network.target
+
+[Service]
+Type=simple
+User=dmarrss
+Group=dmarrss
+WorkingDirectory=/opt/dmarrss
+Environment="DMARRSS_ENFORCE=0"
+Environment="PATH=/opt/dmarrss/venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/opt/dmarrss/venv/bin/dmarrss run
+Restart=on-failure
+RestartSec=10s
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dmarrss
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/dmarrss/data /opt/dmarrss/logs
+
+[Install]
+WantedBy=multi-user.target

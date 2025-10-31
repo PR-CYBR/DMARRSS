@@ -166,12 +166,12 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
 
         # Update metrics
         if METRICS_AVAILABLE:
-            decisions_made.labels(severity=decision.severity.value).inc()
+            decisions_made.labels(severity=decision.severity).inc()
 
         return {
             "event_id": event.event_id,
             "decision_id": decision.decision_id,
-            "severity": decision.severity.value,
+            "severity": decision.severity,
             "confidence": decision.confidence,
             "threat_score": decision.threat_score,
             "recommended_actions": decision.recommended_actions,
@@ -215,12 +215,12 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
             # Update metrics
             if METRICS_AVAILABLE:
                 events_ingested.labels(source=source).inc()
-                decisions_made.labels(severity=decision.severity.value).inc()
+                decisions_made.labels(severity=decision.severity).inc()
 
         # Generate summary
         severity_counts = {}
         for decision in decisions:
-            sev = decision.severity.value
+            sev = decision.severity
             severity_counts[sev] = severity_counts.get(sev, 0) + 1
 
         return {
@@ -229,7 +229,7 @@ def create_app(config: Dict[str, Any]) -> FastAPI:
             "decisions": [
                 {
                     "decision_id": d.decision_id,
-                    "severity": d.severity.value,
+                    "severity": d.severity,
                     "confidence": d.confidence,
                 }
                 for d in decisions
