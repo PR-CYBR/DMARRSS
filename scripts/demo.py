@@ -4,197 +4,125 @@ DMARRSS Demo Script
 Demonstrates the complete DMARRSS threat detection and response pipeline
 """
 
+import random
 import sys
-import json
+import yaml
+from datetime import datetime
 from pathlib import Path
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from src.dmarrss_pipeline import DMARRSSPipeline
-
-
-def print_banner():
-    """Print DMARRSS banner"""
-    print("=" * 80)
-    print("DMARRSS - Decentralized Machine Assisted Rapid Response Security System")
-    print("Version 1.0.0")
-    print("=" * 80)
-    print()
+from dmarrss.parsers import SnortParser, SuricataParser
+from dmarrss.schemas import Event, LogSource
 
 
-def print_event_summary(event):
-    """Print a summary of a processed event"""
-    print(f"\n{'─' * 80}")
-    print(f"Event: {event.get('message', event.get('signature', 'Unknown'))[:60]}")
-    print(f"{'─' * 80}")
-    print(f"  Source:          {event.get('source', 'unknown').upper()}")
-    print(f"  Source IP:       {event.get('source_ip', 'N/A')}")
-    print(f"  Dest IP:         {event.get('destination_ip', 'N/A')}")
-    print(f"  Threat Score:    {event.get('threat_score', 0):.3f}")
-    print(f"  Severity:        {event.get('severity', 'unknown').upper()}")
-    print(f"  Neural Severity: {event.get('neural_severity', 'unknown').upper()} (conf: {event.get('confidence', 0):.3f})")
-    print(f"  Response:        {event.get('response_action', {}).get('action', 'unknown')}")
-    print()
+def generate_synthetic_events(count: int = 10) -> list:
+    """Generate synthetic security events for testing"""
+    events = []
+
+    templates = [
+        "[**] [1:2024364:1] ET MALWARE Critical Ransomware Detected [**] [Priority: 1] {TCP} 203.0.113.50:54321 -> 192.168.1.100:443",
+        "[**] [1:2019401:2] ET EXPLOIT Buffer Overflow Attempt [**] [Priority: 1] {TCP} 10.0.0.50:12345 -> 192.168.1.200:80",
+        "[**] [1:2013028:8] ET SCAN Port Scan Detected [**] [Priority: 3] {TCP} 203.0.113.100:443 -> 192.168.1.50:22",
+        "[**] [1:2001219:19] ET DOS Possible DDoS Attack [**] [Priority: 2] {UDP} 203.0.113.200:53 -> 192.168.1.1:53",
+    ]
+
+    for i in range(count):
+        # Pick random template
+        template = random.choice(templates)
+        # Randomize IP for variety
+        src_ip = f"{random.randint(1, 254)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
+        template = template.replace("203.0.113.50", src_ip)
+        events.append(template)
+
+    return events
 
 
-def demo_snort_processing():
-    """Demonstrate SNORT log processing"""
-    print("\n" + "=" * 80)
-    print("DEMO 1: Processing SNORT Alerts")
-    print("=" * 80)
-    
-    pipeline = DMARRSSPipeline()
-    
-    # Get sample SNORT log file
-    base_path = Path(__file__).parent.parent
-    log_file = base_path / "data" / "raw" / "sample_snort_alerts.log"
-    
-    if not log_file.exists():
-        print(f"Sample log file not found: {log_file}")
-        return
-    
-    print(f"\nProcessing: {log_file}")
-    
-    # Process the file
-    events = pipeline.process_log_file(str(log_file), format_hint='snort')
-    
-    print(f"\nTotal events processed: {len(events)}")
-    
-    # Show high priority events
-    high_priority = pipeline.get_high_priority_events(events)
-    print(f"High priority events: {len(high_priority)}")
-    
-    # Display first few events
-    print("\nTop 5 Events by Priority:")
-    for i, event in enumerate(events[:5], 1):
-        print(f"\n{i}.", end="")
-        print_event_summary(event)
-    
-    # Generate and display summary
-    summary = pipeline.generate_summary(events)
-    print("\n" + "=" * 80)
-    print("SUMMARY STATISTICS")
-    print("=" * 80)
-    print(f"Total Events:        {summary['total_events']}")
-    print(f"Critical:            {summary['by_severity']['critical']}")
-    print(f"High:                {summary['by_severity']['high']}")
-    print(f"Medium:              {summary['by_severity']['medium']}")
-    print(f"Low:                 {summary['by_severity']['low']}")
-    print(f"\nThreat Score Range:  {summary['threat_scores']['min']:.3f} - {summary['threat_scores']['max']:.3f}")
-    print(f"Average Score:       {summary['threat_scores']['average']:.3f}")
-    
-    print("\nResponse Actions:")
-    for action, count in summary['response_actions'].items():
-        print(f"  {action:25s}: {count}")
+def process_events(events: list, config: dict) -> list:
+    """Process events through DMARRSS pipeline"""
+    from dmarrss.scoring.threat_scorer import ThreatScorer
+    from dmarrss.models.inference import ThreatInference
+    from dmarrss.decide.decision_node import DecisionNode
+    from dmarrss.store import Store
 
+    # Initialize components
+    store = Store(":memory:")  # In-memory for demo
+    scorer = ThreatScorer(config, store)
+    inference = ThreatInference()
+    decision_node = DecisionNode(config, scorer, inference)
 
-def demo_suricata_processing():
-    """Demonstrate SURICATA log processing"""
-    print("\n\n" + "=" * 80)
-    print("DEMO 2: Processing SURICATA EVE JSON Logs")
-    print("=" * 80)
-    
-    pipeline = DMARRSSPipeline()
-    
-    # Get sample SURICATA log file
-    base_path = Path(__file__).parent.parent
-    log_file = base_path / "data" / "raw" / "sample_suricata_eve.json"
-    
-    if not log_file.exists():
-        print(f"Sample log file not found: {log_file}")
-        return
-    
-    print(f"\nProcessing: {log_file}")
-    
-    # Read line-delimited JSON
-    with open(log_file, 'r') as f:
-        log_lines = f.readlines()
-    
-    # Process the events
-    events = pipeline.process_log_batch(log_lines, format_hint='suricata')
-    
-    print(f"\nTotal events processed: {len(events)}")
-    
-    # Get critical events
-    critical = pipeline.get_critical_events(events)
-    print(f"Critical events: {len(critical)}")
-    
-    # Display critical events
-    if critical:
-        print("\nCritical Events:")
-        for i, event in enumerate(critical, 1):
-            print(f"\n{i}.", end="")
-            print_event_summary(event)
-    
-    # Generate summary
-    summary = pipeline.generate_summary(events)
-    print("\n" + "=" * 80)
-    print("SUMMARY STATISTICS")
-    print("=" * 80)
-    print(f"Total Events:        {summary['total_events']}")
-    print(f"Critical:            {summary['by_severity']['critical']}")
-    print(f"High:                {summary['by_severity']['high']}")
-    print(f"Medium:              {summary['by_severity']['medium']}")
-    print(f"Low:                 {summary['by_severity']['low']}")
+    # Parse and process
+    parser = SnortParser()
+    results = []
 
+    for log_line in events:
+        event = parser.parse(log_line)
+        if event:
+            decision = decision_node.decide(event)
+            event.threat_score = decision.threat_score
+            event.severity = decision.severity
 
-def demo_single_event():
-    """Demonstrate processing a single log entry"""
-    print("\n\n" + "=" * 80)
-    print("DEMO 3: Processing Single Threat Event")
-    print("=" * 80)
-    
-    pipeline = DMARRSSPipeline()
-    
-    # Process a critical event
-    log_line = "[**] [1:2024364:1] ET EXPLOIT Critical Remote Code Execution Attempt [**] [Classification: Web Application Attack] [Priority: 1] {TCP} 203.0.113.50:54321 -> 192.168.1.100:443"
-    
-    print(f"\nInput: {log_line}")
-    
-    result = pipeline.process_log_line(log_line)
-    
-    if result:
-        print("\nProcessing Result:")
-        print_event_summary(result)
-        
-        print("Detailed Score Components:")
-        for component, score in result.get('score_components', {}).items():
-            print(f"  {component:25s}: {score:.3f}")
-        
-        print("\nNeural Confidence Scores:")
-        for severity, confidence in result.get('confidence_scores', {}).items():
-            print(f"  {severity:10s}: {confidence:.3f}")
+            results.append({
+                "event_id": event.event_id,
+                "source": event.source,
+                "src_ip": event.src_ip,
+                "dst_ip": event.dst_ip,
+                "signature": event.signature,
+                "severity": decision.severity,
+                "threat_score": decision.threat_score,
+                "confidence": decision.confidence,
+                "actions": decision.recommended_actions,
+            })
+
+    return results
 
 
 def main():
-    """Run all demonstrations"""
-    print_banner()
-    
-    try:
-        demo_snort_processing()
-        demo_suricata_processing()
-        demo_single_event()
-        
-        print("\n" + "=" * 80)
-        print("DEMO COMPLETE")
-        print("=" * 80)
-        print("\nDMARRSS successfully processed threat events through:")
-        print("  ✓ Log parsing (SNORT, SURICATA formats)")
-        print("  ✓ Threat scoring with Context Aware Severity Layers")
-        print("  ✓ LLM-inspired neural classification")
-        print("  ✓ Automated response action determination")
-        print("\nThe system is ready for production deployment!")
-        print("=" * 80)
-        
-    except Exception as e:
-        print(f"\nError during demo: {e}")
-        import traceback
-        traceback.print_exc()
-        return 1
-    
-    return 0
+    """Main demo"""
+    print("=" * 80)
+    print("DMARRSS - Decentralized Machine Assisted Rapid Response Security System")
+    print("Demo Script - Synthetic Event Processing")
+    print("=" * 80)
+    print()
+
+    # Load config
+    config_path = Path(__file__).parent.parent / "config" / "dmarrss_config.yaml"
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    # Generate synthetic events
+    print("Generating 10 synthetic security events...")
+    events = generate_synthetic_events(10)
+
+    # Process events
+    print(f"Processing {len(events)} events through DMARRSS pipeline...")
+    results = process_events(events, config)
+
+    # Print results
+    print("\n" + "=" * 80)
+    print("RESULTS")
+    print("=" * 80)
+
+    severity_counts = {}
+    for result in results:
+        sev = result["severity"]
+        severity_counts[sev] = severity_counts.get(sev, 0) + 1
+
+        print(f"\n{result['signature'][:60]}")
+        print(f"  Severity: {sev} | Score: {result['threat_score']:.3f} | Confidence: {result['confidence']:.3f}")
+        print(f"  Source: {result['src_ip']} -> {result['dst_ip']}")
+        if result['actions']:
+            print(f"  Actions: {', '.join(result['actions'])}")
+
+    print("\n" + "=" * 80)
+    print("SUMMARY")
+    print("=" * 80)
+    print(f"Total Events: {len(results)}")
+    for sev, count in sorted(severity_counts.items()):
+        print(f"  {sev}: {count}")
+    print()
 
 
-if __name__ == '__main__':
-    sys.exit(main())
+if __name__ == "__main__":
+    main()

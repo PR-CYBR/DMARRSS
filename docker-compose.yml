@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  dmarrss-daemon:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: dmarrss-daemon
+    environment:
+      - DMARRSS_ENFORCE=${DMARRSS_ENFORCE:-0}
+      - DMARRSS_WEBHOOK_URL=${DMARRSS_WEBHOOK_URL:-}
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    networks:
+      - dmarrss-net
+    restart: unless-stopped
+    command: ["dmarrss", "run"]
+
+  dmarrss-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: dmarrss-api
+    environment:
+      - DMARRSS_ENFORCE=${DMARRSS_ENFORCE:-0}
+      - DMARRSS_WEBHOOK_URL=${DMARRSS_WEBHOOK_URL:-}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    networks:
+      - dmarrss-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    command: ["dmarrss", "api", "--host", "0.0.0.0", "--port", "8080"]
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: dmarrss-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - dmarrss-net
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: dmarrss-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - dmarrss-net
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+networks:
+  dmarrss-net:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:

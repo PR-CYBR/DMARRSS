@@ -1,3 +1,1 @@
-"""
-DMARRSS Tests Package
-"""
+"""Test configuration"""
