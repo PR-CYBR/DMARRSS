@@ -37,7 +37,7 @@ const LANGUAGE_EXT_MAP = {
   ".cs": "C#", ".rb": "Ruby", ".php": "PHP",
   ".sh": "Shell", ".ps1": "PowerShell",
   ".scala": "Scala", ".swift": "Swift",
-  ".m": "Objective‑C", ".mm": "Objective‑C++",
+  ".m": "Objective-C", ".mm": "Objective-C++",
   ".r": "R", ".lua": "Lua"
 };
 
@@ -105,7 +105,7 @@ const topLangs = Array.from(extCounts.entries())
   })
   .join("\n");
 
-const frontmatter = `--- 
+const frontmatter = `---
 markmap:
   initialExpandLevel: 2
   maxWidth: 320
