@@ -60,8 +60,8 @@ jobs:
           retention-days: 7
 
   deploy:
-    # Only deploy on push to main or feature/mdbook-docs branches
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/mdbook-docs' || startsWith(github.ref, 'refs/heads/copilot/'))
+    # Only deploy on push to main branch
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     needs: build
     runs-on: ubuntu-latest
@@ -69,10 +69,10 @@ jobs:
     permissions:
       pages: write
       id-token: write
-      contents: write
+      contents: read
     
     environment:
-      name: github-pages-docs
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}docs/
     
     steps:
