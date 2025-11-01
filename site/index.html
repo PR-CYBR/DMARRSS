@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- CSP: 'unsafe-inline' required for self-contained single-file design. For production apps, use nonces/hashes. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://api.github.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://avatars.githubusercontent.com https://img.shields.io; frame-src 'self'; script-src 'self' 'unsafe-inline'">
   
   <title>DMARRSS — Decentralized Machine Assisted Rapid Response Security System</title>
@@ -532,9 +533,14 @@
         class="mindmap-frame" 
         title="DMARRSS Codebase Mindmap"
         loading="lazy"
-        aria-label="Interactive codebase mindmap">
+        aria-label="Interactive codebase mindmap"
+        onerror="this.style.display='none'; document.getElementById('mindmap-error').style.display='block';">
         <p>Your browser does not support iframes. <a href="repo-map.html">View the mindmap directly</a>.</p>
       </iframe>
+      <div id="mindmap-error" style="display:none; padding:2rem; text-align:center; color:var(--muted); border:1px solid var(--card-border); border-radius:8px; background:var(--card-bg);">
+        <p>⚠️ Mindmap not yet available. It will be generated on the next CI build.</p>
+        <p><a href="https://github.com/PR-CYBR/DMARRSS/tree/main" target="_blank" rel="noopener">Browse the repository</a> in the meantime.</p>
+      </div>
       <p class="mindmap-help">💡 Use mousewheel or pinch to zoom, drag to pan, and click nodes to explore the codebase structure.</p>
     </section>
 
@@ -629,6 +635,24 @@ docker-compose down</pre>
       const codeBlock = button.parentElement;
       const code = codeBlock.querySelector('pre').textContent;
       
+      // Check if clipboard API is available
+      if (!navigator.clipboard) {
+        button.textContent = 'Select & Copy';
+        button.style.background = 'var(--neon-purple)';
+        button.style.color = 'var(--text)';
+        // Select the text as fallback
+        const range = document.createRange();
+        range.selectNode(codeBlock.querySelector('pre'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        setTimeout(() => {
+          button.textContent = 'Copy';
+          button.style.background = '';
+          button.style.color = '';
+        }, 3000);
+        return;
+      }
+      
       navigator.clipboard.writeText(code).then(() => {
         const originalText = button.textContent;
         button.textContent = 'Copied!';
@@ -642,7 +666,19 @@ docker-compose down</pre>
         }, 2000);
       }).catch(err => {
         console.error('Failed to copy:', err);
-        button.textContent = 'Error';
+        button.textContent = 'Select & Copy';
+        button.style.background = 'var(--neon-purple)';
+        button.style.color = 'var(--text)';
+        // Select the text as fallback
+        const range = document.createRange();
+        range.selectNode(codeBlock.querySelector('pre'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        setTimeout(() => {
+          button.textContent = 'Copy';
+          button.style.background = '';
+          button.style.color = '';
+        }, 3000);
       });
     }
 
