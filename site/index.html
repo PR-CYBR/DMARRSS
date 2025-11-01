@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://api.github.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://avatars.githubusercontent.com https://img.shields.io; frame-src 'self'; script-src 'self' 'unsafe-inline'">
+  
+  <title>DMARRSS — Decentralized Machine Assisted Rapid Response Security System</title>
+  <meta name="description" content="DMARRSS: decentralized, LLM-inspired threat detection with neural prioritization and automated response for distributed systems.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="DMARRSS — Decentralized Machine Assisted Rapid Response Security System">
+  <meta property="og:description" content="DMARRSS: decentralized, LLM-inspired threat detection with neural prioritization and automated response for distributed systems.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pr-cybr.github.io/DMARRSS/">
+  <meta property="og:image" content="https://pr-cybr.github.io/DMARRSS/assets/logo.svg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DMARRSS — Decentralized Machine Assisted Rapid Response Security System">
+  <meta name="twitter:description" content="DMARRSS: decentralized, LLM-inspired threat detection with neural prioritization and automated response for distributed systems.">
+  <meta name="twitter:image" content="https://pr-cybr.github.io/DMARRSS/assets/logo.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #0b0e13;
+      --grid: rgba(0,255,240,.08);
+      --neon: #00fff0;
+      --neon-2: #39ff14;
+      --neon-purple: #8a2be2;
+      --text: #e6f7f7;
+      --muted: #93a4a4;
+      --card-bg: rgba(11,14,19,0.85);
+      --card-border: rgba(0,255,240,0.3);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background:
+        radial-gradient(1000px 600px at 50% -20%, rgba(0,255,240,.08), transparent 70%),
+        linear-gradient(transparent 24px, var(--grid) 25px, transparent 26px),
+        linear-gradient(90deg, transparent 24px, var(--grid) 25px, transparent 26px),
+        var(--bg);
+      background-size: 100% 100%, 50px 50px, 50px 50px, auto;
+      background-attachment: fixed, scroll, scroll, scroll;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    h1, h2, h3 {
+      font-family: "Orbitron", Inter, system-ui, sans-serif;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+    }
+    
+    a {
+      color: var(--neon);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    a:hover {
+      color: var(--neon-2);
+    }
+    
+    a:focus, button:focus {
+      outline: 2px solid var(--neon);
+      outline-offset: 2px;
+      box-shadow: 0 0 6px var(--neon-2);
+    }
+    
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,14,19,0.95);
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+    }
+    
+    nav {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-family: "Orbitron", sans-serif;
+      font-weight: 900;
+      color: var(--neon);
+      text-shadow: 0 0 10px var(--neon);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+    
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-links a:hover {
+      border-bottom-color: var(--neon-2);
+    }
+    
+    /* Main Container */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    section {
+      margin-bottom: 4rem;
+    }
+    
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--neon);
+      text-shadow: 0 0 20px var(--neon);
+      margin-bottom: 1rem;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted);
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      border: 2px solid var(--neon);
+      background: transparent;
+      color: var(--neon);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      font-family: "Orbitron", sans-serif;
+    }
+    
+    .btn:hover {
+      background: var(--neon);
+      color: var(--bg);
+      box-shadow: 0 0 20px var(--neon), 0 0 40px var(--neon);
+      transform: scale(1.02);
+    }
+    
+    .btn-secondary {
+      border-color: var(--neon-2);
+      color: var(--neon-2);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--neon-2);
+      box-shadow: 0 0 20px var(--neon-2), 0 0 40px var(--neon-2);
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      border-color: var(--neon);
+      box-shadow: 0 0 15px rgba(0,255,240,0.3);
+    }
+    
+    .card h3 {
+      color: var(--neon-2);
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+    
+    /* Mindmap Section */
+    .mindmap-container {
+      text-align: center;
+      margin: 3rem 0;
+    }
+    
+    .mindmap-container h2 {
+      font-size: 2rem;
+      color: var(--neon);
+      margin-bottom: 1rem;
+    }
+    
+    .mindmap-frame {
+      width: 100%;
+      height: 600px;
+      border: 2px solid var(--card-border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      margin: 2rem 0;
+      box-shadow: 0 0 20px rgba(0,255,240,0.2);
+    }
+    
+    .mindmap-help {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+    
+    /* Quick Start */
+    .quick-start {
+      margin: 3rem 0;
+    }
+    
+    .quick-start h2 {
+      font-size: 2rem;
+      color: var(--neon);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .quick-start-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .code-block {
+      position: relative;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      font-family: "Courier New", monospace;
+      font-size: 0.9rem;
+      color: var(--neon-2);
+      overflow-x: auto;
+    }
+    
+    .code-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid var(--neon);
+      color: var(--neon);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: "Orbitron", sans-serif;
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      background: var(--neon);
+      color: var(--bg);
+    }
+    
+    .copy-btn:active {
+      transform: scale(0.95);
+    }
+    
+    /* Diagrams Gallery */
+    .diagrams {
+      margin: 3rem 0;
+    }
+    
+    .diagrams h2 {
+      font-size: 2rem;
+      color: var(--neon);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .diagram-item {
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: var(--card-bg);
+    }
+    
+    .diagram-item:hover {
+      border-color: var(--neon-2);
+      box-shadow: 0 0 15px rgba(57,255,20,0.3);
+    }
+    
+    .diagram-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .placeholder {
+      color: var(--muted);
+      text-align: center;
+      padding: 2rem;
+      font-style: italic;
+    }
+    
+    /* Status Panel */
+    .status-panel {
+      margin: 3rem 0;
+    }
+    
+    .status-panel h2 {
+      font-size: 2rem;
+      color: var(--neon);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .status-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .status-item h3 {
+      color: var(--neon-2);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .status-item p {
+      color: var(--text);
+      margin: 0.5rem 0;
+    }
+    
+    .status-item a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      padding: 2rem;
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      color: var(--muted);
+    }
+    
+    footer a {
+      color: var(--neon);
+      margin: 0 0.5rem;
+    }
+    
+    /* Animations */
+    @keyframes glow {
+      from { text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon); }
+      to { text-shadow: 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 40px var(--neon); }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+      .hero h1 {
+        animation: none;
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+      
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nav-links {
+        gap: 1rem;
+      }
+      
+      main {
+        padding: 1rem;
+      }
+      
+      .hero {
+        padding: 2rem 1rem;
+      }
+      
+      .mindmap-frame {
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo" aria-label="DMARRSS Logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 16L16 4L28 16L16 28L4 16Z" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+        <span>DMARRSS</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#mindmap">Mindmap</a></li>
+        <li><a href="#diagrams">Diagrams</a></li>
+        <li><a href="#quick-start">Quick Start</a></li>
+        <li><a href="https://github.com/PR-CYBR/DMARRSS#readme" target="_blank" rel="noopener">Docs</a></li>
+        <li><a href="#status">Status</a></li>
+        <li><a href="https://github.com/PR-CYBR/DMARRSS/releases" target="_blank" rel="noopener">Releases</a></li>
+        <li><a href="https://github.com/PR-CYBR/DMARRSS" target="_blank" rel="noopener">Repo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+      <h1>DMARRSS</h1>
+      <p>Decentralized Machine Assisted Rapid Response Security System</p>
+      <p>LLM-inspired neural threat prioritization for distributed systems with Context-Aware Event Severity Layers and automated response orchestration.</p>
+      <div class="cta-buttons">
+        <a href="#mindmap" class="btn">Open Codebase Mindmap</a>
+        <a href="#quick-start" class="btn btn-secondary">Get Started</a>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section>
+      <div class="quick-start-grid">
+        <div class="card">
+          <h3>🧠 LLM-Inspired Architecture</h3>
+          <p>Neural network architecture inspired by transformer models for advanced threat pattern detection with attention mechanisms.</p>
+        </div>
+        <div class="card">
+          <h3>📊 Context-Aware Severity</h3>
+          <p>Dual-layer severity assessment system (CAESL) for precise threat classification with confidence scoring.</p>
+        </div>
+        <div class="card">
+          <h3>⚡ Real-time Processing</h3>
+          <p>High-performance pipeline capable of processing thousands of events per second from SNORT, SURICATA, and ZEEK.</p>
+        </div>
+        <div class="card">
+          <h3>🤖 Automated Response</h3>
+          <p>Intelligent response system with configurable severity-based actions and dry-run mode for safe testing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mindmap -->
+    <section class="mindmap-container" id="mindmap">
+      <h2>Live Codebase Mindmap</h2>
+      <p>Interactive visualization of the DMARRSS architecture and file structure</p>
+      <iframe 
+        src="repo-map.html" 
+        class="mindmap-frame" 
+        title="DMARRSS Codebase Mindmap"
+        loading="lazy"
+        aria-label="Interactive codebase mindmap">
+        <p>Your browser does not support iframes. <a href="repo-map.html">View the mindmap directly</a>.</p>
+      </iframe>
+      <p class="mindmap-help">💡 Use mousewheel or pinch to zoom, drag to pan, and click nodes to explore the codebase structure.</p>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="quick-start" id="quick-start">
+      <h2>Quick Start</h2>
+      <div class="quick-start-grid">
+        <div class="card">
+          <h3>Clone & Install</h3>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code">Copy</button>
+            <pre># Clone the repository
+git clone https://github.com/PR-CYBR/DMARRSS.git
+cd DMARRSS
+
+# Install dependencies
+pip install -e ".[dev]"
+
+# Train the model
+dmarrss train</pre>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>Run API Server</h3>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code">Copy</button>
+            <pre># Start REST API server
+dmarrss api --host 0.0.0.0 --port 8080
+
+# Check status
+curl http://localhost:8080/status
+
+# View metrics
+curl http://localhost:8080/metrics</pre>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>Docker Compose</h3>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code">Copy</button>
+            <pre># Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Diagrams -->
+    <section class="diagrams" id="diagrams">
+      <h2>System Diagrams</h2>
+      <div id="diagram-gallery" class="diagram-grid">
+        <div class="placeholder loading">Loading diagrams from repository...</div>
+      </div>
+    </section>
+
+    <!-- Status Panel -->
+    <section class="status-panel" id="status">
+      <h2>Build & Release Status</h2>
+      <div class="status-grid">
+        <div class="status-item">
+          <h3>Latest Commit</h3>
+          <div id="commit-info" class="loading">Loading...</div>
+        </div>
+        <div class="status-item">
+          <h3>Latest Release</h3>
+          <div id="release-info" class="loading">Loading...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <a href="https://github.com/PR-CYBR/DMARRSS/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> |
+      <a href="https://github.com/PR-CYBR/DMARRSS/issues" target="_blank" rel="noopener">Report Issues</a> |
+      <a href="https://github.com/PR-CYBR/DMARRSS" target="_blank" rel="noopener">View on GitHub</a>
+    </p>
+    <p>Built with GitHub Pages • Neural Threat Detection for Distributed Systems</p>
+  </footer>
+
+  <script>
+    // Copy to clipboard functionality
+    function copyCode(button) {
+      const codeBlock = button.parentElement;
+      const code = codeBlock.querySelector('pre').textContent;
+      
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        button.style.background = 'var(--neon-2)';
+        button.style.color = 'var(--bg)';
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.background = '';
+          button.style.color = '';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        button.textContent = 'Error';
+      });
+    }
+
+    // GitHub API helpers
+    const GITHUB_API = 'https://api.github.com';
+    const REPO = 'PR-CYBR/DMARRSS';
+
+    async function fetchGitHub(endpoint) {
+      try {
+        const response = await fetch(`${GITHUB_API}${endpoint}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('GitHub API error:', error);
+        return null;
+      }
+    }
+
+    // Load latest commit
+    async function loadCommitInfo() {
+      const commits = await fetchGitHub(`/repos/${REPO}/commits?sha=main&per_page=1`);
+      const container = document.getElementById('commit-info');
+      
+      if (commits && commits.length > 0) {
+        const commit = commits[0];
+        const sha = commit.sha.substring(0, 7);
+        const date = new Date(commit.commit.author.date).toLocaleString();
+        const message = commit.commit.message.split('\n')[0];
+        
+        container.innerHTML = `
+          <p><strong>SHA:</strong> <a href="${commit.html_url}" target="_blank" rel="noopener">${sha}</a></p>
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Message:</strong> ${message}</p>
+          <p><strong>Author:</strong> ${commit.commit.author.name}</p>
+        `;
+      } else {
+        container.innerHTML = '<p>Unable to fetch commit info. <a href="https://github.com/PR-CYBR/DMARRSS/commits/main" target="_blank" rel="noopener">View on GitHub</a></p>';
+      }
+    }
+
+    // Load latest release
+    async function loadReleaseInfo() {
+      const release = await fetchGitHub(`/repos/${REPO}/releases/latest`);
+      const container = document.getElementById('release-info');
+      
+      if (release && !release.message) {
+        const date = new Date(release.published_at).toLocaleString();
+        
+        container.innerHTML = `
+          <p><strong>Version:</strong> <a href="${release.html_url}" target="_blank" rel="noopener">${release.tag_name}</a></p>
+          <p><strong>Published:</strong> ${date}</p>
+          <p><strong>Name:</strong> ${release.name || release.tag_name}</p>
+          <a href="${release.html_url}" target="_blank" rel="noopener">View Release Notes →</a>
+        `;
+      } else {
+        container.innerHTML = '<p>No releases yet. <a href="https://github.com/PR-CYBR/DMARRSS/releases" target="_blank" rel="noopener">Check for updates</a></p>';
+      }
+    }
+
+    // Load diagrams from mermaid directory
+    async function loadDiagrams() {
+      const contents = await fetchGitHub(`/repos/${REPO}/contents/mermaid`);
+      const gallery = document.getElementById('diagram-gallery');
+      
+      if (contents && Array.isArray(contents)) {
+        const diagrams = contents.filter(file => 
+          file.name.endsWith('.svg') || 
+          file.name.endsWith('.png') || 
+          file.name.endsWith('.html')
+        );
+        
+        if (diagrams.length > 0) {
+          gallery.innerHTML = diagrams.map(file => {
+            const name = file.name.replace(/\.(svg|png|html)$/, '');
+            const displayName = name.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            if (file.name.endsWith('.html')) {
+              return `
+                <div class="diagram-item">
+                  <p><strong>${displayName}</strong></p>
+                  <a href="${file.html_url}" target="_blank" rel="noopener">View Diagram →</a>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="diagram-item">
+                  <a href="${file.html_url}" target="_blank" rel="noopener">
+                    <img src="${file.download_url}" alt="${displayName}" loading="lazy">
+                    <p><strong>${displayName}</strong></p>
+                  </a>
+                </div>
+              `;
+            }
+          }).join('');
+        } else {
+          gallery.innerHTML = '<div class="placeholder">No diagrams found yet. Check back soon!</div>';
+        }
+      } else {
+        gallery.innerHTML = '<div class="placeholder">Diagrams coming soon. <a href="https://github.com/PR-CYBR/DMARRSS/tree/main/mermaid" target="_blank" rel="noopener">View source</a></div>';
+      }
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Load GitHub data on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCommitInfo();
+      loadReleaseInfo();
+      loadDiagrams();
+    });
+  </script>
+</body>
+</html>
