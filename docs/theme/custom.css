@@ -1,0 +1,340 @@
+/* DMARRSS Custom Tron-style Theme */
+/* Matching the site design with black background and neon cyan/green highlights */
+
+:root {
+  --bg: #0b0e13;
+  --bg-secondary: rgba(11, 14, 19, 0.85);
+  --grid: rgba(0, 255, 240, 0.08);
+  --neon: #00fff0;
+  --neon-2: #39ff14;
+  --neon-purple: #8a2be2;
+  --text: #e6f7f7;
+  --muted: #93a4a4;
+  --card-border: rgba(0, 255, 240, 0.3);
+  --sidebar-bg: rgba(11, 14, 19, 0.95);
+  --sidebar-fg: #e6f7f7;
+  --sidebar-non-existent: #93a4a4;
+  --sidebar-active: #00fff0;
+  --sidebar-spacer: rgba(0, 255, 240, 0.2);
+  --scrollbar: rgba(0, 255, 240, 0.3);
+  --icons: #93a4a4;
+  --icons-hover: #00fff0;
+  --links: #00fff0;
+  --inline-code-color: #39ff14;
+  --theme-popup-bg: rgba(11, 14, 19, 0.95);
+  --theme-popup-border: rgba(0, 255, 240, 0.3);
+  --theme-hover: rgba(0, 255, 240, 0.1);
+  --quote-bg: rgba(0, 255, 240, 0.05);
+  --quote-border: rgba(0, 255, 240, 0.3);
+  --table-border-color: rgba(0, 255, 240, 0.3);
+  --table-header-bg: rgba(0, 255, 240, 0.1);
+  --table-alternate-bg: rgba(0, 255, 240, 0.03);
+  --searchbar-border-color: rgba(0, 255, 240, 0.3);
+  --searchbar-bg: rgba(11, 14, 19, 0.95);
+  --searchbar-fg: #e6f7f7;
+  --searchbar-shadow-color: rgba(0, 255, 240, 0.2);
+  --searchresults-header-fg: #00fff0;
+  --searchresults-border-color: rgba(0, 255, 240, 0.3);
+  --searchresults-li-bg: rgba(11, 14, 19, 0.95);
+  --search-mark-bg: rgba(57, 255, 20, 0.3);
+}
+
+/* Global background with grid pattern */
+body {
+  background: radial-gradient(1000px 600px at 50% -20%, rgba(0, 255, 240, 0.08), transparent 70%),
+    linear-gradient(transparent 24px, var(--grid) 25px, transparent 26px),
+    linear-gradient(90deg, transparent 24px, var(--grid) 25px, transparent 26px), var(--bg) !important;
+  background-size: 100% 100%, 50px 50px, 50px 50px, auto !important;
+  background-attachment: fixed, scroll, scroll, scroll !important;
+  color: var(--text) !important;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Orbitron', Inter, system-ui, sans-serif !important;
+  color: var(--neon) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+h1 {
+  text-shadow: 0 0 10px var(--neon) !important;
+}
+
+/* Links */
+a {
+  color: var(--links) !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  color: var(--neon-2) !important;
+  text-shadow: 0 0 5px var(--neon-2) !important;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--sidebar-bg) !important;
+  border-right: 1px solid var(--card-border) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.sidebar-scrollbox {
+  background-color: transparent !important;
+}
+
+.chapter {
+  color: var(--sidebar-fg) !important;
+}
+
+.chapter li.chapter-item {
+  border-left: 2px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.chapter li.chapter-item:hover {
+  border-left-color: var(--neon-2) !important;
+  background: rgba(0, 255, 240, 0.05) !important;
+}
+
+.chapter .active,
+.chapter .active a {
+  color: var(--sidebar-active) !important;
+  background: rgba(0, 255, 240, 0.1) !important;
+  border-left: 2px solid var(--neon) !important;
+  font-weight: 600 !important;
+}
+
+/* Content area */
+.content {
+  background-color: transparent !important;
+  color: var(--text) !important;
+}
+
+.page {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 8px !important;
+  padding: 2rem !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 0 15px rgba(0, 255, 240, 0.1) !important;
+}
+
+/* Code blocks */
+pre,
+code {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 4px !important;
+  color: var(--neon-2) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+code {
+  padding: 0.2em 0.4em !important;
+  color: var(--inline-code-color) !important;
+}
+
+pre {
+  padding: 1rem !important;
+  overflow-x: auto !important;
+}
+
+pre > code {
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse !important;
+  border: 1px solid var(--table-border-color) !important;
+  background: var(--bg-secondary) !important;
+}
+
+table thead {
+  background: var(--table-header-bg) !important;
+}
+
+table thead th {
+  color: var(--neon) !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid var(--card-border) !important;
+}
+
+table td,
+table th {
+  border: 1px solid var(--table-border-color) !important;
+  padding: 0.75rem !important;
+}
+
+table tbody tr:nth-child(even) {
+  background: var(--table-alternate-bg) !important;
+}
+
+table tbody tr:hover {
+  background: rgba(0, 255, 240, 0.08) !important;
+}
+
+/* Blockquotes */
+blockquote {
+  background: var(--quote-bg) !important;
+  border-left: 4px solid var(--neon) !important;
+  color: var(--text) !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  border-radius: 4px !important;
+}
+
+/* Buttons and controls */
+button,
+.button {
+  background: transparent !important;
+  border: 2px solid var(--neon) !important;
+  color: var(--neon) !important;
+  border-radius: 4px !important;
+  padding: 0.5rem 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+button:hover,
+.button:hover {
+  background: var(--neon) !important;
+  color: var(--bg) !important;
+  box-shadow: 0 0 10px var(--neon) !important;
+}
+
+/* Search bar */
+#searchbar {
+  background: var(--searchbar-bg) !important;
+  border: 1px solid var(--searchbar-border-color) !important;
+  color: var(--searchbar-fg) !important;
+  border-radius: 4px !important;
+}
+
+#searchbar:focus {
+  border-color: var(--neon) !important;
+  box-shadow: 0 0 10px rgba(0, 255, 240, 0.3) !important;
+}
+
+.searchresults-header {
+  color: var(--searchresults-header-fg) !important;
+  font-weight: 600 !important;
+}
+
+/* Icons */
+.icon-button {
+  color: var(--icons) !important;
+}
+
+.icon-button:hover {
+  color: var(--icons-hover) !important;
+  text-shadow: 0 0 5px var(--icons-hover) !important;
+}
+
+/* Menu bar */
+.menu-bar {
+  background-color: var(--sidebar-bg) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.menu-title {
+  color: var(--neon) !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 10px var(--neon) !important;
+}
+
+/* Navigation arrows */
+.nav-chapters {
+  color: var(--links) !important;
+}
+
+.nav-chapters:hover {
+  color: var(--neon-2) !important;
+  text-decoration: none !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg) !important;
+  border-radius: 5px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar) !important;
+  border-radius: 5px !important;
+  border: 2px solid var(--bg) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon) !important;
+  box-shadow: 0 0 5px var(--neon) !important;
+}
+
+/* Print page */
+.print-page {
+  background: transparent !important;
+}
+
+/* Mobile menu */
+.mobile-nav-chapters {
+  background: var(--sidebar-bg) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* Warning/Info boxes */
+.warning,
+.info {
+  border-radius: 4px !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+}
+
+.warning {
+  background: rgba(138, 43, 226, 0.1) !important;
+  border-left: 4px solid var(--neon-purple) !important;
+}
+
+.info {
+  background: rgba(0, 255, 240, 0.05) !important;
+  border-left: 4px solid var(--neon) !important;
+}
+
+/* Mermaid diagrams */
+.mermaid {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 4px !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+}
+
+/* Additional glow effect for headers on hover */
+h1:hover,
+h2:hover,
+h3:hover {
+  text-shadow: 0 0 20px var(--neon), 0 0 30px var(--neon) !important;
+  transition: text-shadow 0.3s ease !important;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
