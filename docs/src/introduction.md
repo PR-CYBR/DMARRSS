@@ -74,7 +74,7 @@ docker-compose down
 
 ## Requirements
 
-- Python 3.8 or higher
+- Python 3.10 or higher
 - PyTorch 2.0+
 - NumPy, Pandas, scikit-learn
 - PyYAML for configuration management
