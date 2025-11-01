@@ -63,3 +63,6 @@ data/models/*.pth
 
 # Generated markmap files
 markmap/
+
+# mdBook build output
+docs/book/
