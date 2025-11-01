@@ -1,8 +1,12 @@
 # Introduction
 
-![DMARRSS Logo](https://pr-cybr.github.io/DMARRSS/assets/logo.svg)
+<div style="text-align: center; margin: 2rem 0;">
+  <img src="assets/logo.svg" alt="DMARRSS Logo" width="200" height="200" style="margin: 0 auto;">
+</div>
 
-**DMARRSS** - Decentralized Machine Assisted Rapid Response Security System
+# DMARRSS
+
+**Decentralized Machine Assisted Rapid Response Security System**
 
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]() [![Python](https://img.shields.io/badge/python-3.8%2B-blue)]() [![License](https://img.shields.io/badge/license-MIT-blue)]()
 
