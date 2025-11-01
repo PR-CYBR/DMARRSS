@@ -38,6 +38,26 @@ jobs:
       - name: Build Markmap HTML
         run: npx markmap-cli ./markmap/repo-map.md -o ./markmap/repo-map.html
 
+      - name: Prepare Pages artifact
+        run: |
+          # Create dist directory for Pages deployment
+          mkdir -p dist
+          
+          # Copy markmap output (ensure repo-map.html is accessible at /repo-map.html)
+          if [ -f ./markmap/repo-map.html ]; then
+            cp ./markmap/repo-map.html dist/
+          fi
+          
+          # Copy site files (index.html and assets)
+          cp -R site/* dist/
+          
+          # Add .nojekyll to prevent Jekyll processing
+          touch dist/.nojekyll
+          
+          # List what we're deploying
+          echo "Contents of dist directory:"
+          ls -la dist/
+
       - name: Upload artifact (downloadable)
         uses: actions/upload-artifact@v4
         with:
@@ -47,7 +67,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./markmap
+          path: ./dist
 
   deploy:
     needs: build
