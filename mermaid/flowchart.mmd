@@ -1,0 +1,127 @@
+flowchart TB
+classDef dir fill:#eef,stroke:#99c,stroke-width:1px;
+d__["DMARRSS/"]:::dir
+f__gitignore[".gitignore"]
+f__markmapignore[".markmapignore"]
+f__mermaidignore[".mermaidignore"]
+d_config["config/"]:::dir
+f_config_dmarrss_config_yaml["dmarrss_config.yaml"]
+f_config_README_md["README.md"]
+d_data["data/"]:::dir
+d_data_models["models/"]:::dir
+f_data_models_README_md["README.md"]
+d_data_processed["processed/"]:::dir
+f_data_processed_README_md["README.md"]
+d_data_raw["raw/"]:::dir
+f_data_raw_README_md["README.md"]
+f_data_raw_sample_snort_alerts_log["sample_snort_alerts.log"]
+f_data_raw_sample_suricata_eve_json["sample_suricata_eve.json"]
+d_docs["docs/"]:::dir
+f_docs_phase_breakdown_md["phase-breakdown.md"]
+f_docs_roadmap_md["roadmap.md"]
+f_IMPLEMENTATION_SUMMARY_md["IMPLEMENTATION_SUMMARY.md"]
+f_LICENSE["LICENSE"]
+d_logs["logs/"]:::dir
+f_logs_README_md["README.md"]
+d_mermaid["mermaid/"]:::dir
+f_mermaid_architecture_mmd["architecture.mmd"]
+f_mermaid_bpmnish_mmd["bpmnish.mmd"]
+f_mermaid_ci_sequence_mmd["ci-sequence.mmd"]
+f_mermaid_er_mmd["er.mmd"]
+f_mermaid_flowchart_mmd["flowchart.mmd"]
+f_README_md["README.md"]
+f_requirements_txt["requirements.txt"]
+d_scripts["scripts/"]:::dir
+f_scripts_demo_py["demo.py"]
+f_scripts_generate_markmap_mjs["generate-markmap.mjs"]
+f_scripts_generate_mermaid_mjs["generate-mermaid.mjs"]
+f_scripts_README_md["README.md"]
+d_src["src/"]:::dir
+f_src___init___py["__init__.py"]
+d_src_assets["assets/"]:::dir
+f_src_dmarrss_pipeline_py["dmarrss_pipeline.py"]
+d_src_models["models/"]:::dir
+f_src_models___init___py["__init__.py"]
+f_src_models_neural_processor_py["neural_processor.py"]
+f_src_models_README_md["README.md"]
+f_src_models_response_engine_py["response_engine.py"]
+f_src_models_threat_scorer_py["threat_scorer.py"]
+d_src_preprocessing["preprocessing/"]:::dir
+f_src_preprocessing___init___py["__init__.py"]
+f_src_preprocessing_log_parser_py["log_parser.py"]
+f_src_preprocessing_README_md["README.md"]
+d_src_utils["utils/"]:::dir
+f_src_utils___init___py["__init__.py"]
+f_src_utils_config_py["config.py"]
+f_src_utils_README_md["README.md"]
+d_src_visualization["visualization/"]:::dir
+f_src_visualization_README_md["README.md"]
+d_tests["tests/"]:::dir
+f_tests___init___py["__init__.py"]
+f_tests_README_md["README.md"]
+f_tests_test_config_py["test_config.py"]
+f_tests_test_integration_py["test_integration.py"]
+f_tests_test_parsing_py["test_parsing.py"]
+f_tests_test_threat_scorer_py["test_threat_scorer.py"]
+d__ --> f__gitignore
+d__ --> f__markmapignore
+d__ --> f__mermaidignore
+d__ --> d_config
+d_config --> f_config_dmarrss_config_yaml
+d_config --> f_config_README_md
+d__ --> d_data
+d_data --> d_data_models
+d_data_models --> f_data_models_README_md
+d_data --> d_data_processed
+d_data_processed --> f_data_processed_README_md
+d_data --> d_data_raw
+d_data_raw --> f_data_raw_README_md
+d_data_raw --> f_data_raw_sample_snort_alerts_log
+d_data_raw --> f_data_raw_sample_suricata_eve_json
+d__ --> d_docs
+d_docs --> f_docs_phase_breakdown_md
+d_docs --> f_docs_roadmap_md
+d__ --> f_IMPLEMENTATION_SUMMARY_md
+d__ --> f_LICENSE
+d__ --> d_logs
+d_logs --> f_logs_README_md
+d__ --> d_mermaid
+d_mermaid --> f_mermaid_architecture_mmd
+d_mermaid --> f_mermaid_bpmnish_mmd
+d_mermaid --> f_mermaid_ci_sequence_mmd
+d_mermaid --> f_mermaid_er_mmd
+d_mermaid --> f_mermaid_flowchart_mmd
+d__ --> f_README_md
+d__ --> f_requirements_txt
+d__ --> d_scripts
+d_scripts --> f_scripts_demo_py
+d_scripts --> f_scripts_generate_markmap_mjs
+d_scripts --> f_scripts_generate_mermaid_mjs
+d_scripts --> f_scripts_README_md
+d__ --> d_src
+d_src --> f_src___init___py
+d_src --> d_src_assets
+d_src --> f_src_dmarrss_pipeline_py
+d_src --> d_src_models
+d_src_models --> f_src_models___init___py
+d_src_models --> f_src_models_neural_processor_py
+d_src_models --> f_src_models_README_md
+d_src_models --> f_src_models_response_engine_py
+d_src_models --> f_src_models_threat_scorer_py
+d_src --> d_src_preprocessing
+d_src_preprocessing --> f_src_preprocessing___init___py
+d_src_preprocessing --> f_src_preprocessing_log_parser_py
+d_src_preprocessing --> f_src_preprocessing_README_md
+d_src --> d_src_utils
+d_src_utils --> f_src_utils___init___py
+d_src_utils --> f_src_utils_config_py
+d_src_utils --> f_src_utils_README_md
+d_src --> d_src_visualization
+d_src_visualization --> f_src_visualization_README_md
+d__ --> d_tests
+d_tests --> f_tests___init___py
+d_tests --> f_tests_README_md
+d_tests --> f_tests_test_config_py
+d_tests --> f_tests_test_integration_py
+d_tests --> f_tests_test_parsing_py
+d_tests --> f_tests_test_threat_scorer_py
