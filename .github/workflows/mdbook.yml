@@ -19,7 +19,7 @@ on:
 
 # Allow only one concurrent deployment
 concurrency:
-  group: "pages"
+  group: "pages-docs"
   cancel-in-progress: false
 
 jobs:
@@ -69,8 +69,8 @@ jobs:
       contents: write
     
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: github-pages-docs
+      url: ${{ steps.deployment.outputs.page_url }}docs/
     
     steps:
       - name: Checkout repository
@@ -80,22 +80,27 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: mdbook-docs
-          path: docs/book
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+          path: docs-build
 
       - name: Prepare Pages deployment
         run: |
-          mkdir -p _site
-          # Copy the mdBook output to _site/docs for deployment
-          cp -r docs/book/* _site/docs/
-          # Also copy existing site content if it exists
+          # Create a deployment directory structure
+          mkdir -p _site/docs
+          
+          # Copy the mdBook output to _site/docs
+          cp -r docs-build/* _site/docs/
+          
+          # Copy existing site content
           if [ -d "site" ]; then
             cp -r site/* _site/ || true
           fi
-          # Ensure .nojekyll exists
+          
+          # Ensure .nojekyll exists to disable Jekyll processing
           touch _site/.nojekyll
+          
+          echo "Deployment structure:"
+          ls -la _site/
+          ls -la _site/docs/ | head -20
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -105,3 +110,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
