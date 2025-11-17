@@ -60,6 +60,8 @@ data/processed/*
 data/models/*.pt
 data/models/*.pth
 !data/models/README.md
+data/cache/*
+!data/cache/.gitkeep
 
 # Generated markmap files
 markmap/
