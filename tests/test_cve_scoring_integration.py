@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-import pytest
 import yaml
 
 from dmarrss.enrichment.cve_enricher import CVEEnricher

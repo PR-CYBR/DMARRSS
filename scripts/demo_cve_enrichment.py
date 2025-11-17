@@ -189,7 +189,7 @@ def demo_event_enrichment():
             enrichment = enriched["cve_enrichment"]
             print(f"  Max CVSS Score: {enrichment['max_cvss_score']}")
             print(f"  Max Severity: {enrichment['max_severity']}")
-            print(f"\n  CVE Details:")
+            print("\n  CVE Details:")
             for cve in enrichment["cves"]:
                 print(f"    - {cve['cve_id']}: {cve['cvss_base_score']} ({cve['cvss_severity']})")
 
@@ -264,7 +264,7 @@ def demo_scoring_integration():
 
         print("Event WITH CVE:")
         print(f"  Signature: {event_with_cve.signature}")
-        print(f"  Baseline Score Components:")
+        print("  Baseline Score Components:")
         print(f"    - Pattern Match: {components_with_cve.pattern_match:.3f}")
         print(f"    - Context Relevance: {components_with_cve.context_relevance:.3f}")
         print(f"  Final Threat Score: {score_with_cve:.3f}")
@@ -272,7 +272,7 @@ def demo_scoring_integration():
 
         print("\nEvent WITHOUT CVE:")
         print(f"  Signature: {event_without_cve.signature}")
-        print(f"  Baseline Score Components:")
+        print("  Baseline Score Components:")
         print(f"    - Pattern Match: {components_without_cve.pattern_match:.3f}")
         print(f"    - Context Relevance: {components_without_cve.context_relevance:.3f}")
         print(f"  Final Threat Score: {score_without_cve:.3f}")
