@@ -1,0 +1,74 @@
+{
+  "CVE-2023-12345": {
+    "data": {
+      "base_score": 9.8,
+      "severity": "CRITICAL",
+      "exploitability_score": 3.9,
+      "impact_score": null,
+      "attack_vector": "NETWORK",
+      "attack_complexity": null,
+      "privileges_required": null,
+      "user_interaction": null,
+      "scope": null,
+      "confidentiality_impact": null,
+      "integrity_impact": null,
+      "availability_impact": null,
+      "description": "Critical RCE vulnerability"
+    },
+    "timestamp": "2025-11-17T18:22:36.896722"
+  },
+  "CVE-2023-99999": {
+    "data": {
+      "base_score": 10.0,
+      "severity": "CRITICAL",
+      "exploitability_score": null,
+      "impact_score": null,
+      "attack_vector": null,
+      "attack_complexity": null,
+      "privileges_required": null,
+      "user_interaction": null,
+      "scope": null,
+      "confidentiality_impact": null,
+      "integrity_impact": null,
+      "availability_impact": null,
+      "description": "Critical vuln"
+    },
+    "timestamp": "2025-11-17T18:22:36.911769"
+  },
+  "CVE-2023-11111": {
+    "data": {
+      "base_score": 9.8,
+      "severity": "CRITICAL",
+      "exploitability_score": null,
+      "impact_score": null,
+      "attack_vector": null,
+      "attack_complexity": null,
+      "privileges_required": null,
+      "user_interaction": null,
+      "scope": null,
+      "confidentiality_impact": null,
+      "integrity_impact": null,
+      "availability_impact": null,
+      "description": "Test"
+    },
+    "timestamp": "2025-11-17T18:22:36.953408"
+  },
+  "CVE-2023-22222": {
+    "data": {
+      "base_score": 5.0,
+      "severity": "MEDIUM",
+      "exploitability_score": null,
+      "impact_score": null,
+      "attack_vector": null,
+      "attack_complexity": null,
+      "privileges_required": null,
+      "user_interaction": null,
+      "scope": null,
+      "confidentiality_impact": null,
+      "integrity_impact": null,
+      "availability_impact": null,
+      "description": "Test"
+    },
+    "timestamp": "2025-11-17T18:22:36.954447"
+  }
+}
