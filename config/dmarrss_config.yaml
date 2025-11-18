@@ -40,6 +40,10 @@ scoring:
     historical_severity: 0.20
     source_reputation: 0.15
     anomaly_score: 0.10
+  cve_weight: 0.30  # Weight for CVSS score contribution
+  cve_cache_file: "./data/cache/cve_cache.json"
+  cve_timeout: 10.0  # seconds
+  cve_cache_ttl_hours: 24
   cidr_include: ["10.0.0.0/8", "192.168.0.0/16"]
   reputation_csv: "./data/reputation/reputation.csv"
 

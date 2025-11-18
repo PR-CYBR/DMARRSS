@@ -7,6 +7,7 @@ Implements config-driven composite threat scoring with:
 - Historical severity tracking
 - Source reputation
 - Anomaly detection
+- CVE/CVSS enrichment
 """
 
 import ipaddress
@@ -14,6 +15,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from ..enrichment import CVEEnricher
 from ..schemas import Event, ThreatScoreComponents
 from ..store import Store
 
@@ -42,6 +44,14 @@ class ThreatScorer:
             ipaddress.ip_network(c) for c in scoring_config.get("cidr_include", [])
         ]
         self.reputation_csv_path = scoring_config.get("reputation_csv", "")
+
+        # Initialize CVE enricher
+        cve_cache_file = scoring_config.get("cve_cache_file", "./data/cache/cve_cache.json")
+        self.cve_enricher = CVEEnricher(
+            cache_file=cve_cache_file,
+            timeout=scoring_config.get("cve_timeout", 10.0),
+            cache_ttl_hours=scoring_config.get("cve_cache_ttl_hours", 24),
+        )
 
         # Load reputation data
         self.reputation_map: dict[str, float] = {}
@@ -280,3 +290,66 @@ class ThreatScorer:
         )
 
         return components
+
+    def enrich_and_score_event(self, event: Event) -> tuple[Event, ThreatScoreComponents, float]:
+        """
+        Enrich event with CVE data and calculate threat score.
+
+        This is the main entry point that:
+        1. Enriches event with CVE/CVSS data
+        2. Calculates baseline threat score components
+        3. Augments score based on CVSS data
+        4. Applies classification override for critical CVEs
+
+        Args:
+            event: Event to enrich and score
+
+        Returns:
+            Tuple of (enriched_event, score_components, final_score)
+        """
+        # Convert Event to dict for enrichment
+        event_dict = event.model_dump()
+
+        # Enrich with CVE data
+        enriched_dict = self.cve_enricher.enrich_event(event_dict)
+
+        # Calculate baseline score components
+        components = self.score_event(event)
+
+        # Calculate baseline composite score
+        baseline_score = self.calculate_composite_score(components)
+
+        # Apply CVSS score augmentation if CVE data present
+        final_score = baseline_score
+        cve_enrichment = enriched_dict.get("cve_enrichment")
+
+        if cve_enrichment:
+            max_cvss_score = cve_enrichment.get("max_cvss_score", 0.0)
+            max_severity = cve_enrichment.get("max_severity", "UNKNOWN")
+
+            # Get CVE weight from config (default 0.3)
+            cve_weight = self.config.get("scoring", {}).get("cve_weight", 0.3)
+
+            # Normalize CVSS score to 0-1 range and apply weight
+            cvss_contribution = (max_cvss_score / 10.0) * cve_weight
+
+            # Augment baseline score
+            final_score = min(baseline_score + cvss_contribution, 1.0)
+
+            # Classification override for critical/high CVEs
+            if max_severity in ["CRITICAL", "HIGH"] and max_cvss_score >= 9.0:
+                # Force score to critical threshold
+                final_score = max(final_score, 0.9)
+
+        # Update event with enrichment data
+        if cve_enrichment:
+            event.raw = enriched_dict.get("raw", event.raw)
+            # Store CVE enrichment in event tags
+            event.tags = event.tags or []
+            for cve_data in cve_enrichment.get("cves", []):
+                event.tags.append(f"cve:{cve_data['cve_id']}")
+
+        # Set computed fields
+        event.threat_score = final_score
+
+        return event, components, final_score
