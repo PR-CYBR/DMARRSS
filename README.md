@@ -1,11 +1,12 @@
 # DMARRSS - Decentralized Machine Assisted Rapid Response Security System
 
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]() [![Python](https://img.shields.io/badge/python-3.8%2B-blue)]() [![License](https://img.shields.io/badge/license-MIT-blue)]()
+[![Tests](https://img.shields.io/badge/tests-73%20passing-brightgreen)]() [![Python](https://img.shields.io/badge/python-3.10%2B-blue)]() [![License](https://img.shields.io/badge/license-MIT-blue)]() [![NIST CSF 2.0](https://img.shields.io/badge/NIST%20CSF-2.0-blue)]()
 
-DMARRSS is an advanced threat detection and response system that leverages **LLM-inspired architecture** and **neural networks** to intelligently detect, classify, and prioritize security threats in distributed systems. The system processes logs from industry-standard security tools (SNORT, SURICATA, ZEEK) and applies sophisticated scoring algorithms with Context Aware Event Severity Layers to identify critical threats and automate response actions.
+DMARRSS is an advanced threat detection and response system that leverages **LLM-inspired architecture**, **neural networks**, and **NIST CSF 2.0 framework** to intelligently detect, classify, and prioritize security threats in distributed systems. The system processes logs from industry-standard security tools (SNORT, SURICATA, ZEEK) and applies sophisticated scoring algorithms with Context Aware Event Severity Layers to identify critical threats and automate response actions.
 
 ## 🎯 Key Features
 
+### Core Capabilities
 - **LLM-Inspired Pattern Recognition**: Neural network architecture inspired by transformer models for advanced threat pattern detection
 - **Context-Aware Event Severity Layers**: Dual-layer severity assessment system for precise threat classification
 - **Multi-Source Log Ingestion**: Native support for SNORT, SURICATA, and ZEEK log formats
@@ -13,6 +14,43 @@ DMARRSS is an advanced threat detection and response system that leverages **LLM
 - **Automated Response Actions**: Intelligent response system with configurable severity-based actions
 - **Modular Architecture**: Clean, extensible design with separate components for parsing, scoring, classification, and response
 - **Real-time Processing**: High-performance pipeline capable of processing thousands of events per second
+
+### NIST CSF 2.0 Integration 🆕
+DMARRSS now includes comprehensive NIST Cybersecurity Framework 2.0 support:
+
+- **IDENTIFY** 🔍
+  - **Asset Inventory**: Automated collection of system assets (OS, processes, network, users, software)
+  - Cross-platform support (Windows, Linux, macOS)
+  - Baseline establishment for anomaly detection
+
+- **PROTECT** 🛡️
+  - **Security Baseline Checks**: Firewall, antivirus, logging status verification
+  - Weak configuration detection (SSH, default passwords)
+  - Vulnerability assessment and recommendations
+
+- **DETECT** 🎯
+  - **Anomaly Detection**: Behavioral baseline comparison for processes, network, and users
+  - **Threat Intelligence Integration**: IoC matching against malicious IPs, domains, and file hashes
+  - Real-time threat feed updates with extensible feed framework
+  - Automatic IoC scanning during event processing
+
+- **RESPOND** ⚡
+  - **Enhanced Response Actions**: Process termination, network quarantine, account disable
+  - **Artifact Collection**: Automatic forensic evidence collection for critical threats
+  - Recovery tracking for all response actions
+  - Policy-based action configuration
+
+- **RECOVER** 🔄
+  - **Change Tracking**: Complete audit trail of all modifications
+  - **File Backup**: Automatic backup before critical changes
+  - **Recovery Reports**: Detailed remediation and restoration guidance
+  - Service restoration tracking
+
+- **GOVERN** 📊
+  - **CSF Alignment Reports**: Comprehensive activity mapping to CSF functions
+  - **Executive Summaries**: Management-friendly compliance reports
+  - **Activity Logging**: Structured JSON logs with CSF function tags
+  - Compliance status tracking
 
 ## 🗺️ Live Codebase Mindmap
 
@@ -159,6 +197,44 @@ dmarrss api --host 0.0.0.0 --port 8080
 
 # Show version
 dmarrss version
+
+# NIST CSF 2.0 Commands
+dmarrss collect-inventory          # Collect asset inventory (Identify)
+dmarrss check-baseline             # Run security baseline checks (Protect)
+dmarrss detect-anomalies           # Detect anomalies from baseline (Detect)
+dmarrss update-threat-intel        # Update threat intelligence feeds (Detect)
+dmarrss generate-csf-report        # Generate CSF alignment report (Govern)
+dmarrss generate-csf-report --executive  # Generate executive summary
+```
+
+### NIST CSF Workflow
+
+Complete CSF workflow example:
+
+```bash
+# 1. IDENTIFY: Establish baseline
+dmarrss collect-inventory
+
+# 2. PROTECT: Check security posture
+dmarrss check-baseline
+
+# 3. DETECT & RESPOND: Run threat hunting
+dmarrss run
+
+# 4. DETECT: Check for anomalies
+dmarrss detect-anomalies
+
+# 5. GOVERN: Generate compliance reports
+dmarrss generate-csf-report --executive
+
+# Generate and process synthetic events
+dmarrss simulate --count 20
+
+# Start REST API server
+dmarrss api --host 0.0.0.0 --port 8080
+
+# Show version
+dmarrss version
 ```
 
 ### Python API
@@ -288,10 +364,47 @@ severity_layers:
 
 ```yaml
 responses:
-  CRITICAL: ["block_ip", "notify_webhook"]
+  CRITICAL: ["block_ip", "notify_webhook", "collect_artifacts"]
   HIGH: ["notify_webhook"]
   MEDIUM: ["notify_webhook"]
   LOW: []
+```
+
+### NIST CSF Configuration 🆕
+
+```yaml
+csf:
+  # Asset Inventory (IDENTIFY function)
+  asset_inventory:
+    enabled: true
+    auto_collect_on_start: true
+    
+  # Security Baseline (PROTECT function)
+  security_baseline:
+    enabled: true
+    auto_check_on_start: false
+    
+  # Anomaly Detection (DETECT function)
+  anomaly_detection:
+    enabled: true
+    process_threshold: 0.2  # 20% deviation threshold
+    network_threshold: 0.3  # 30% deviation threshold
+    user_threshold: 0.5     # 50% deviation threshold
+    
+  # Threat Intelligence (DETECT function)
+  threat_intel:
+    enabled: true
+    update_interval_hours: 24
+    
+  # Recovery (RECOVER function)
+  recovery:
+    enabled: true
+    auto_backup_before_changes: true
+    
+  # CSF Reporting (GOVERN function)
+  reporting:
+    enabled: true
+    auto_generate_on_complete: true
 ```
 
 ### Environment Variables
@@ -396,13 +509,23 @@ pytest tests/test_parsers.py::TestSnortParser::test_parse_snort_alert_with_prior
 
 ### Test Results
 
-Current test coverage: **49%** (23/23 tests passing)
+Current test coverage: **73 tests passing** (50 original + 23 CSF tests)
 
+#### Core Tests
 - ✅ Parser tests: SNORT, SURICATA, ZEEK format parsing
 - ✅ Scoring tests: Threat scoring components and composite scores
 - ✅ Decision tests: Severity classification and batch processing
 - ✅ Action tests: Dry-run mode for all action plugins
 - ✅ Integration tests: End-to-end pipeline with in-memory storage
+- ✅ CVE enrichment: CVE detection, fetching, caching
+
+#### NIST CSF Tests 🆕
+- ✅ Asset Inventory: System info, network, processes collection
+- ✅ Security Baseline: Firewall, antivirus, logging checks
+- ✅ Anomaly Detection: Process, network, user anomalies
+- ✅ Threat Intelligence: IoC loading, matching, event scanning
+- ✅ Recovery Manager: Change tracking, backups, reporting
+- ✅ CSF Reporter: Activity logging, alignment reports, summaries
 
 ### CI/CD
 
@@ -441,12 +564,23 @@ Sample security logs are included for testing and demonstration:
   - `block_ip.py`: Platform-specific firewall rules (Linux/Mac/Windows)
   - `isolate_host.py`: Network isolation
   - `notify_webhook.py`: Webhook notifications
+  - `terminate_process.py`: Enhanced process control
+  - `quarantine_network.py`: Network quarantine
+  - `disable_account.py`: Account management
+  - `collect_artifacts.py`: Forensic artifact collection
+- **`src/dmarrss/csf/`**: NIST CSF 2.0 modules 🆕
+  - `asset_inventory.py`: Asset catalog and baseline (IDENTIFY)
+  - `security_baseline.py`: Security posture checks (PROTECT)
+  - `anomaly_detector.py`: Behavioral anomaly detection (DETECT)
+  - `threat_intel.py`: IoC feed integration (DETECT)
+  - `recovery.py`: Recovery and restoration (RECOVER)
+  - `csf_reporting.py`: Governance and reporting (GOVERN)
 - **`src/dmarrss/store.py`**: SQLite persistence layer
   - Events, decisions, actions, statistics
   - File position tracking for log tailers
 - **`src/dmarrss/api.py`**: FastAPI REST server with Prometheus metrics
 - **`src/dmarrss/cli.py`**: Typer-based command-line interface
-- **`src/dmarrss/daemon.py`**: Autonomous daemon supervisor
+- **`src/dmarrss/daemon.py`**: Autonomous daemon supervisor with CSF integration
 
 ## 🎓 Example Output
 
@@ -471,6 +605,7 @@ Score Components:
 
 ## 🛠️ Development Roadmap
 
+### Completed ✅
 - [x] Core pipeline implementation
 - [x] Multi-format log parsing (SNORT, SURICATA, ZEEK)
 - [x] Threat scoring with Context Aware Severity Layers
@@ -480,12 +615,27 @@ Score Components:
 - [x] Command-line interface
 - [x] Docker and Docker Compose support
 - [x] CI/CD with GitHub Actions
-- [x] Comprehensive test suite (49% coverage)
+- [x] Comprehensive test suite (73 tests passing)
+- [x] **NIST CSF 2.0 Integration** 🆕
+  - [x] Asset inventory (IDENTIFY)
+  - [x] Security baseline checks (PROTECT)
+  - [x] Anomaly detection (DETECT)
+  - [x] Threat intelligence integration (DETECT)
+  - [x] Enhanced response actions (RESPOND)
+  - [x] Recovery mechanisms (RECOVER)
+  - [x] Governance reporting (GOVERN)
+
+### In Progress 🚧
 - [ ] Async log tailers with watchdog
+- [ ] Continuous monitoring mode with scheduling
+- [ ] Email alerting (SMTP integration)
+- [ ] SIEM integration support
+
+### Planned 📋
 - [ ] Fine-tuning on domain-specific cybersecurity datasets
 - [ ] Distributed agent deployment
 - [ ] Web-based visualization dashboard
-- [ ] Threat intelligence feed integration
+- [ ] Advanced threat intelligence feed sources
 - [ ] Increase test coverage to ≥85%
 
 ## 📖 Documentation
