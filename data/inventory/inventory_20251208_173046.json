@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-08T17:30:48.959486",
+  "timestamp": "2025-12-08T17:30:46.895935",
   "csf_function": "IDENTIFY",
   "csf_category": "ID.AM - Asset Management",
   "system": {
@@ -70,27 +70,7 @@
     },
     "listening_ports": [
       {
-        "port": 53,
-        "address": "127.0.0.54",
-        "protocol": "tcp"
-      },
-      {
-        "port": 2301,
-        "address": "::",
-        "protocol": "tcp"
-      },
-      {
-        "port": 53,
-        "address": "127.0.0.53",
-        "protocol": "tcp"
-      },
-      {
         "port": 39939,
-        "address": "::",
-        "protocol": "tcp"
-      },
-      {
-        "port": 22,
         "address": "::",
         "protocol": "tcp"
       },
@@ -100,8 +80,28 @@
         "protocol": "tcp"
       },
       {
+        "port": 53,
+        "address": "127.0.0.54",
+        "protocol": "tcp"
+      },
+      {
+        "port": 53,
+        "address": "127.0.0.53",
+        "protocol": "tcp"
+      },
+      {
+        "port": 22,
+        "address": "::",
+        "protocol": "tcp"
+      },
+      {
         "port": 22,
         "address": "0.0.0.0",
+        "protocol": "tcp"
+      },
+      {
+        "port": 2301,
+        "address": "::",
         "protocol": "tcp"
       }
     ]
@@ -1278,7 +1278,7 @@
     },
     {
       "pid": 3707,
-      "name": "kworker/u16:1-events_unbound",
+      "name": "kworker/u16:1-events_power_efficient",
       "username": "root",
       "status": "idle",
       "create_time": 1765214226.37
@@ -1418,7 +1418,7 @@
     },
     {
       "pid": 4090,
-      "name": "kworker/u16:0-ext4-rsv-conversion",
+      "name": "kworker/u16:0-events_power_efficient",
       "username": "root",
       "status": "idle",
       "create_time": 1765215007.17
@@ -1438,32 +1438,18 @@
       "create_time": 1765215045.8
     },
     {
-      "pid": 4132,
-      "name": "timeout",
-      "username": "runner",
-      "status": "sleeping",
-      "create_time": 1765215046.57
-    },
-    {
-      "pid": 4133,
-      "name": "grep",
-      "username": "runner",
-      "status": "sleeping",
-      "create_time": 1765215046.57
-    },
-    {
-      "pid": 4134,
-      "name": "head",
-      "username": "runner",
-      "status": "sleeping",
-      "create_time": 1765215046.57
-    },
-    {
-      "pid": 4135,
+      "pid": 4121,
       "name": "dmarrss",
       "username": "runner",
       "status": "running",
-      "create_time": 1765215046.57
+      "create_time": 1765215045.8
+    },
+    {
+      "pid": 4122,
+      "name": "grep",
+      "username": "runner",
+      "status": "sleeping",
+      "create_time": 1765215045.8
     }
   ],
   "users": [],
