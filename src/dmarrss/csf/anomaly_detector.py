@@ -164,12 +164,26 @@ class AnomalyDetector:
         return anomalies
 
     def _is_common_process(self, process_name: str) -> bool:
-        """Check if a process is commonly found on systems"""
+        """
+        Check if a process is commonly found on systems.
+        
+        Note: This list is a basic set of common system processes.
+        In production, this should be configurable per environment via config.
+        """
+        # Get custom common processes from config if available
+        anomaly_config = self.config.get("anomaly_detection", {})
+        custom_common = anomaly_config.get("common_processes", [])
+        
+        # Default common processes
         common_processes = {
             "systemd", "kthreadd", "rcu_sched", "bash", "sh", "sshd",
             "cron", "dbus-daemon", "systemd-journal", "python", "python3",
             "node", "java", "docker", "containerd", "nginx", "apache2",
         }
+        
+        # Add custom processes from config
+        common_processes.update(custom_common)
+        
         return process_name.lower() in common_processes
 
     def detect_network_anomalies(self, current_network: dict[str, Any]) -> list[Anomaly]:

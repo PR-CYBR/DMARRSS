@@ -1,8 +1,5 @@
-"""
-Tests for NIST CSF 2.0 modules.
-"""
-
 import json
+import tempfile
 import pytest
 from pathlib import Path
 
@@ -17,9 +14,11 @@ from dmarrss.csf.csf_reporting import CSFReporter
 @pytest.fixture
 def test_config():
     """Test configuration"""
+    # Use tempfile for cross-platform compatibility
+    temp_dir = tempfile.gettempdir()
     return {
         "system": {
-            "data_dir": "/tmp/dmarrss_test_csf",
+            "data_dir": str(Path(temp_dir) / "dmarrss_test_csf"),
         },
         "csf": {
             "asset_inventory": {"enabled": True, "auto_collect_on_start": True},
