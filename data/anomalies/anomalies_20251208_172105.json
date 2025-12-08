@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-12-08T17:21:05.036246",
+  "csf_function": "DETECT",
+  "csf_category": "DE.AE - Anomalies and Events",
+  "anomalies": [
+    {
+      "anomaly_type": "new_processes",
+      "severity": "MEDIUM",
+      "description": "2 new process(es) detected",
+      "baseline_value": 151,
+      "current_value": 150,
+      "deviation": 0.013245033112582781,
+      "details": {
+        "new_processes": [
+          "kworker/1:1-events",
+          "kworker/u16:1-events_unbound"
+        ]
+      },
+      "timestamp": "2025-12-08T17:21:05.036182",
+      "csf_function": "DETECT",
+      "csf_category": "DE.AE - Anomalies and Events"
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  }
+}
