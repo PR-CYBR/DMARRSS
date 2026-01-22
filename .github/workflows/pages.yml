@@ -63,7 +63,12 @@ jobs:
           mkdir -p _site/docs
           
           # Copy main site (index.html and assets)
-          cp -r site/* _site/
+          if [ -d "site" ] && [ "$(ls -A site)" ]; then
+            cp -r site/* _site/
+          else
+            echo "Warning: site directory is empty or does not exist"
+            exit 1
+          fi
           
           # Copy markmap visualization
           if [ -f ./markmap/repo-map.html ]; then
@@ -71,7 +76,12 @@ jobs:
           fi
           
           # Copy mdBook documentation
-          cp -r docs/book/* _site/docs/
+          if [ -d "docs/book" ] && [ "$(ls -A docs/book)" ]; then
+            cp -r docs/book/* _site/docs/
+          else
+            echo "Warning: docs/book directory is empty or does not exist"
+            exit 1
+          fi
           
           # Add .nojekyll to prevent Jekyll processing
           touch _site/.nojekyll
@@ -84,7 +94,7 @@ jobs:
           ls -la _site/docs/ | head -20
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: _site
 
