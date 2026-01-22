@@ -68,3 +68,6 @@ markmap/
 
 # mdBook build output
 docs/book/
+
+# GitHub Pages build output
+_site/
