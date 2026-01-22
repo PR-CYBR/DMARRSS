@@ -1,0 +1,103 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: '0.4.40'
+
+      # Build markmap
+      - name: Install markmap-cli
+        run: npm install -g markmap-cli
+
+      - name: Generate Markdown map
+        run: node ./scripts/generate-markmap.mjs
+
+      - name: Build Markmap HTML
+        run: npx markmap-cli ./markmap/repo-map.md -o ./markmap/repo-map.html
+
+      # Build mdBook documentation
+      - name: Build mdBook
+        run: |
+          cd docs
+          mdbook build
+
+      # Prepare unified deployment
+      - name: Prepare Pages deployment
+        run: |
+          # Create deployment directory
+          mkdir -p _site/docs
+          
+          # Copy main site (index.html and assets)
+          if [ -d "site" ] && [ "$(ls -A site)" ]; then
+            cp -r site/* _site/
+          else
+            echo "Warning: site directory is empty or does not exist"
+            exit 1
+          fi
+          
+          # Copy markmap visualization
+          if [ -f ./markmap/repo-map.html ]; then
+            cp ./markmap/repo-map.html _site/
+          fi
+          
+          # Copy mdBook documentation
+          if [ -d "docs/book" ] && [ "$(ls -A docs/book)" ]; then
+            cp -r docs/book/* _site/docs/
+          else
+            echo "Warning: docs/book directory is empty or does not exist"
+            exit 1
+          fi
+          
+          # Add .nojekyll to prevent Jekyll processing
+          touch _site/.nojekyll
+          
+          # List deployment structure
+          echo "Deployment structure:"
+          ls -la _site/
+          echo ""
+          echo "Docs directory:"
+          ls -la _site/docs/ | head -20
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
