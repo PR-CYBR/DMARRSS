@@ -10,6 +10,9 @@ torch>=2.0.0
 # Logging and configuration
 python-json-logger>=2.0.0
 
+# System monitoring for CSF modules
+psutil>=5.9.0
+
 # Testing
 pytest>=7.4.0
 pytest-cov>=4.1.0

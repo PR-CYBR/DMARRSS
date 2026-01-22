@@ -183,5 +183,188 @@ def version():
     typer.echo(f"DMARRSS version {__version__}")
 
 
+@app.command()
+def collect_inventory(
+    config: str = typer.Option(
+        "config/dmarrss_config.yaml", "--config", "-c", help="Path to config file"
+    ),
+):
+    """
+    Collect system asset inventory (NIST CSF Identify function).
+
+    Catalogs OS info, processes, network, users, and software.
+    """
+    typer.echo("Collecting asset inventory...")
+
+    try:
+        from .csf.asset_inventory import AssetInventory
+
+        config_data = load_config(config)
+        inventory = AssetInventory(config_data)
+
+        # Collect and save inventory
+        filepath = inventory.save_inventory()
+
+        typer.echo(f"✓ Asset inventory saved to {filepath}")
+
+    except Exception as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@app.command()
+def check_baseline(
+    config: str = typer.Option(
+        "config/dmarrss_config.yaml", "--config", "-c", help="Path to config file"
+    ),
+):
+    """
+    Check security baseline (NIST CSF Protect function).
+
+    Verifies firewall, antivirus, logging, and configurations.
+    """
+    typer.echo("Checking security baseline...")
+
+    try:
+        from .csf.security_baseline import SecurityBaseline
+
+        config_data = load_config(config)
+        baseline = SecurityBaseline(config_data)
+
+        # Run checks and save findings
+        filepath = baseline.save_findings()
+
+        # Load and display summary
+        findings_data = baseline.load_findings()
+        summary = findings_data.get("summary", {})
+
+        typer.echo("\n✓ Security baseline check complete")
+        typer.echo(f"  Total findings: {summary.get('total', 0)}")
+        typer.echo(f"  Critical: {summary.get('critical', 0)}")
+        typer.echo(f"  High: {summary.get('high', 0)}")
+        typer.echo(f"  Medium: {summary.get('medium', 0)}")
+        typer.echo(f"  Low: {summary.get('low', 0)}")
+        typer.echo(f"\n  Report saved to {filepath}")
+
+    except Exception as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@app.command()
+def detect_anomalies(
+    config: str = typer.Option(
+        "config/dmarrss_config.yaml", "--config", "-c", help="Path to config file"
+    ),
+):
+    """
+    Detect anomalies from baseline (NIST CSF Detect function).
+
+    Compares current state against baseline inventory.
+    """
+    typer.echo("Detecting anomalies...")
+
+    try:
+        from .csf.anomaly_detector import AnomalyDetector
+        from .csf.asset_inventory import AssetInventory
+
+        config_data = load_config(config)
+
+        # Collect current inventory
+        inventory = AssetInventory(config_data)
+        current = inventory.collect_all()
+
+        # Detect anomalies
+        detector = AnomalyDetector(config_data)
+        detector.load_baseline()
+        anomalies = detector.detect_all_anomalies(current)
+        filepath = detector.save_anomalies(anomalies)
+
+        # Display summary
+        typer.echo("\n✓ Anomaly detection complete")
+        typer.echo(f"  Total anomalies: {len(anomalies)}")
+        high_count = sum(1 for a in anomalies if a.severity == "HIGH")
+        medium_count = sum(1 for a in anomalies if a.severity == "MEDIUM")
+        low_count = sum(1 for a in anomalies if a.severity == "LOW")
+        typer.echo(f"  High: {high_count}")
+        typer.echo(f"  Medium: {medium_count}")
+        typer.echo(f"  Low: {low_count}")
+        typer.echo(f"\n  Report saved to {filepath}")
+
+    except Exception as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@app.command()
+def update_threat_intel(
+    config: str = typer.Option(
+        "config/dmarrss_config.yaml", "--config", "-c", help="Path to config file"
+    ),
+):
+    """
+    Update threat intelligence feeds (NIST CSF Detect function).
+
+    Loads IoCs from configured threat feeds.
+    """
+    typer.echo("Updating threat intelligence feeds...")
+
+    try:
+        from .csf.threat_intel import ThreatIntelligence
+
+        config_data = load_config(config)
+        intel = ThreatIntelligence(config_data)
+
+        # Load feeds
+        intel.load_feeds()
+        intel.mark_updated()
+
+        typer.echo("✓ Threat intelligence updated")
+        typer.echo(f"  IPs: {len(intel.iocs['ips'])}")
+        typer.echo(f"  Domains: {len(intel.iocs['domains'])}")
+        typer.echo(f"  Hashes: {len(intel.iocs['hashes'])}")
+
+    except Exception as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@app.command()
+def generate_csf_report(
+    config: str = typer.Option(
+        "config/dmarrss_config.yaml", "--config", "-c", help="Path to config file"
+    ),
+    executive: bool = typer.Option(False, "--executive", help="Generate executive summary"),
+):
+    """
+    Generate NIST CSF alignment report (NIST CSF Govern function).
+
+    Provides governance and compliance reporting.
+    """
+    typer.echo("Generating CSF report...")
+
+    try:
+        from .csf.csf_reporting import CSFReporter
+
+        config_data = load_config(config)
+        reporter = CSFReporter(config_data)
+
+        if executive:
+            filepath = reporter.save_executive_summary()
+            typer.echo(f"✓ Executive summary saved to {filepath}")
+        else:
+            filepath = reporter.save_csf_report()
+
+            # Load activities from data
+            reporter.load_activities_from_data()
+
+            typer.echo("✓ CSF alignment report generated")
+            typer.echo(f"  Report saved to {filepath}")
+
+    except Exception as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
 if __name__ == "__main__":
     app()

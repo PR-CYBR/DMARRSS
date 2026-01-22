@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-12-08T17:30:49.105599",
+  "csf_function": "DETECT",
+  "csf_category": "DE.DP - Detection Processes",
+  "matches": [
+    {
+      "ioc_type": "ip",
+      "ioc_value": "203.0.113.50",
+      "source": "threat_intel",
+      "description": "Malicious IP detected: 203.0.113.50",
+      "severity": "HIGH",
+      "context": {
+        "event_field": "src_ip"
+      },
+      "timestamp": "2025-12-08T17:30:49.075535",
+      "csf_function": "DETECT",
+      "csf_category": "DE.DP - Detection Processes"
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "critical": 0,
+    "high": 1,
+    "medium": 0
+  }
+}

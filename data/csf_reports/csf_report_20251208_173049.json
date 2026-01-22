@@ -1,0 +1,303 @@
+{
+  "timestamp": "2025-12-08T17:30:49.160813",
+  "report_type": "NIST CSF 2.0 Alignment Report",
+  "summary": {
+    "total_activities": 25,
+    "by_function": {
+      "IDENTIFY": 2,
+      "PROTECT": 1,
+      "DETECT": 4,
+      "RESPOND": 18,
+      "RECOVER": 0,
+      "GOVERN": 0
+    }
+  },
+  "functions": {
+    "IDENTIFY": {
+      "description": "Asset management and risk assessment",
+      "activities": [
+        {
+          "csf_function": "IDENTIFY",
+          "category": "ID.AM - Asset Management",
+          "description": "Asset inventory collected at daemon start",
+          "details": {},
+          "timestamp": "2025-12-08T17:30:49.035797"
+        },
+        {
+          "csf_function": "IDENTIFY",
+          "category": "ID.AM - Asset Management",
+          "description": "Asset inventory collected",
+          "details": {
+            "process_count": 194,
+            "software_count": 100,
+            "network_interfaces": 3
+          },
+          "timestamp": "2025-12-08T17:30:49.160498"
+        }
+      ],
+      "count": 2
+    },
+    "PROTECT": {
+      "description": "Protective measures and safeguards",
+      "activities": [
+        {
+          "csf_function": "PROTECT",
+          "category": "PR.IP - Information Protection",
+          "description": "Security baseline check completed",
+          "details": {
+            "total_findings": 2,
+            "critical": 0,
+            "high": 0,
+            "medium": 1
+          },
+          "timestamp": "2025-12-08T17:30:49.160600"
+        }
+      ],
+      "count": 1
+    },
+    "DETECT": {
+      "description": "Threat detection and monitoring",
+      "activities": [
+        {
+          "csf_function": "DETECT",
+          "category": "DE.DP - Detection Processes",
+          "description": "Threat intelligence match detected: 203.0.113.50",
+          "details": {
+            "ioc_type": "ip"
+          },
+          "timestamp": "2025-12-08T17:30:49.075601"
+        },
+        {
+          "csf_function": "DETECT",
+          "category": "DE.AE - Anomalies and Events",
+          "description": "Anomaly detection completed: 1 anomalies found",
+          "details": {},
+          "timestamp": "2025-12-08T17:30:49.160065"
+        },
+        {
+          "csf_function": "DETECT",
+          "category": "DE.AE - Anomalies and Events",
+          "description": "Anomaly detection completed",
+          "details": {
+            "total_anomalies": 1,
+            "high": 0,
+            "medium": 1,
+            "low": 0
+          },
+          "timestamp": "2025-12-08T17:30:49.160672"
+        },
+        {
+          "csf_function": "DETECT",
+          "category": "DE.DP - Detection Processes",
+          "description": "Threat intelligence scan completed",
+          "details": {
+            "total_matches": 1,
+            "critical": 0,
+            "high": 1
+          },
+          "timestamp": "2025-12-08T17:30:49.160738"
+        }
+      ],
+      "count": 4
+    },
+    "RESPOND": {
+      "description": "Incident response actions",
+      "activities": [
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.6679999999999999
+          },
+          "timestamp": "2025-12-08T17:30:49.039864"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.596
+          },
+          "timestamp": "2025-12-08T17:30:49.043958"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.596
+          },
+          "timestamp": "2025-12-08T17:30:49.047717"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.5239999999999999
+          },
+          "timestamp": "2025-12-08T17:30:49.051118"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.6679999999999999
+          },
+          "timestamp": "2025-12-08T17:30:49.055326"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.596
+          },
+          "timestamp": "2025-12-08T17:30:49.058991"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.6679999999999999
+          },
+          "timestamp": "2025-12-08T17:30:49.062809"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.6679999999999999
+          },
+          "timestamp": "2025-12-08T17:30:49.066349"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.5239999999999999
+          },
+          "timestamp": "2025-12-08T17:30:49.070342"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.596
+          },
+          "timestamp": "2025-12-08T17:30:49.073996"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.64
+          },
+          "timestamp": "2025-12-08T17:30:49.078125"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.58
+          },
+          "timestamp": "2025-12-08T17:30:49.081707"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.64
+          },
+          "timestamp": "2025-12-08T17:30:49.085470"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.58
+          },
+          "timestamp": "2025-12-08T17:30:49.088980"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.64
+          },
+          "timestamp": "2025-12-08T17:30:49.092810"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.5376
+          },
+          "timestamp": "2025-12-08T17:30:49.096353"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.58
+          },
+          "timestamp": "2025-12-08T17:30:49.100353"
+        },
+        {
+          "csf_function": "RESPOND",
+          "category": "RS.AN - Analysis",
+          "description": "Threat detected and classified as MEDIUM",
+          "details": {
+            "threat_score": 0.64
+          },
+          "timestamp": "2025-12-08T17:30:49.104259"
+        }
+      ],
+      "count": 18
+    },
+    "RECOVER": {
+      "description": "Recovery and restoration",
+      "activities": [],
+      "count": 0
+    },
+    "GOVERN": {
+      "description": "Governance and oversight",
+      "activities": [],
+      "count": 0
+    }
+  },
+  "compliance_status": {
+    "overall": "PARTIALLY_ALIGNED",
+    "by_function": {
+      "IDENTIFY": "ACTIVE",
+      "PROTECT": "ACTIVE",
+      "DETECT": "ACTIVE",
+      "RESPOND": "ACTIVE",
+      "RECOVER": "NOT_IMPLEMENTED",
+      "GOVERN": "NOT_IMPLEMENTED"
+    },
+    "coverage": "66.7%"
+  },
+  "recommendations": [
+    "Implement RECOVER function to improve CSF alignment",
+    "Implement GOVERN function to improve CSF alignment",
+    "Review and update security policies regularly",
+    "Conduct periodic CSF alignment assessments",
+    "Integrate DMARRSS with SIEM for centralized monitoring",
+    "Provide security awareness training to staff",
+    "Document incident response procedures"
+  ]
+}

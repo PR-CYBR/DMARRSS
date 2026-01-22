@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-08T17:30:49.696037",
+  "report_type": "Executive Summary - NIST CSF 2.0",
+  "overview": {
+    "total_activities": 4,
+    "compliance_status": "PARTIALLY_ALIGNED",
+    "coverage": "50.0%"
+  },
+  "key_metrics": {
+    "assets_identified": 1,
+    "security_findings": 1,
+    "threats_detected": 2,
+    "incidents_responded": 0,
+    "recovery_actions": 0
+  },
+  "top_recommendations": [
+    "Implement RESPOND function to improve CSF alignment",
+    "Implement RECOVER function to improve CSF alignment",
+    "Implement GOVERN function to improve CSF alignment",
+    "Review and update security policies regularly",
+    "Conduct periodic CSF alignment assessments"
+  ],
+  "next_steps": [
+    "Review security findings and remediate high-priority issues",
+    "Continue monitoring for anomalies and threats",
+    "Update incident response procedures based on lessons learned",
+    "Schedule next CSF assessment"
+  ]
+}

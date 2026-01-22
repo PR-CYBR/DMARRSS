@@ -15,7 +15,7 @@
       "availability_impact": null,
       "description": "Critical RCE vulnerability"
     },
-    "timestamp": "2025-11-17T18:29:37.104620"
+    "timestamp": "2026-01-22T15:47:14.437580"
   },
   "CVE-2023-99999": {
     "data": {
@@ -33,7 +33,7 @@
       "availability_impact": null,
       "description": "Critical vuln"
     },
-    "timestamp": "2025-11-17T18:29:37.119443"
+    "timestamp": "2026-01-22T15:47:14.456965"
   },
   "CVE-2023-22222": {
     "data": {
@@ -51,7 +51,7 @@
       "availability_impact": null,
       "description": "Test"
     },
-    "timestamp": "2025-11-17T18:29:37.160064"
+    "timestamp": "2026-01-22T15:47:14.512419"
   },
   "CVE-2023-11111": {
     "data": {
@@ -69,6 +69,6 @@
       "availability_impact": null,
       "description": "Test"
     },
-    "timestamp": "2025-11-17T18:29:37.161061"
+    "timestamp": "2026-01-22T15:47:14.511236"
   }
 }
