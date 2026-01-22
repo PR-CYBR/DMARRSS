@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class DisableAccountAction(BaseAction):
     """
     Disable a potentially compromised user account.
-    
+
     Platform-specific implementation for account management.
     """
 
@@ -136,7 +136,14 @@ class DisableAccountAction(BaseAction):
         try:
             # Disable the user account
             result = subprocess.run(
-                ["dscl", ".", "-create", f"/Users/{username}", "AuthenticationAuthority", ";DisabledUser;"],
+                [
+                    "dscl",
+                    ".",
+                    "-create",
+                    f"/Users/{username}",
+                    "AuthenticationAuthority",
+                    ";DisabledUser;",
+                ],
                 capture_output=True,
                 timeout=10,
             )

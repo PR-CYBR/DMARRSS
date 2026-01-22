@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class CSFReporter:
     """
     NIST CSF 2.0 alignment reporting.
-    
+
     Implements NIST CSF 2.0 Govern function by:
     - Tracking activities by CSF function
     - Generating compliance reports
@@ -28,7 +28,7 @@ class CSFReporter:
     def __init__(self, config: dict):
         """
         Initialize CSF reporter.
-        
+
         Args:
             config: Configuration dictionary
         """
@@ -56,7 +56,7 @@ class CSFReporter:
     ) -> None:
         """
         Log an activity for CSF reporting.
-        
+
         Args:
             csf_function: NIST CSF function (IDENTIFY, PROTECT, DETECT, RESPOND, RECOVER, GOVERN)
             category: CSF category (e.g., ID.AM, DE.CM)
@@ -222,7 +222,7 @@ class CSFReporter:
     def generate_csf_alignment_report(self) -> dict[str, Any]:
         """
         Generate comprehensive CSF alignment report.
-        
+
         Returns:
             CSF alignment report dictionary
         """
@@ -234,9 +234,7 @@ class CSFReporter:
             "report_type": "NIST CSF 2.0 Alignment Report",
             "summary": {
                 "total_activities": sum(len(acts) for acts in self.activities.values()),
-                "by_function": {
-                    func: len(acts) for func, acts in self.activities.items()
-                },
+                "by_function": {func: len(acts) for func, acts in self.activities.items()},
             },
             "functions": {
                 "IDENTIFY": {
@@ -313,25 +311,25 @@ class CSFReporter:
         # Check for missing functions
         for func, activities in self.activities.items():
             if len(activities) == 0:
-                recommendations.append(
-                    f"Implement {func} function to improve CSF alignment"
-                )
+                recommendations.append(f"Implement {func} function to improve CSF alignment")
 
         # General recommendations
-        recommendations.extend([
-            "Review and update security policies regularly",
-            "Conduct periodic CSF alignment assessments",
-            "Integrate DMARRSS with SIEM for centralized monitoring",
-            "Provide security awareness training to staff",
-            "Document incident response procedures",
-        ])
+        recommendations.extend(
+            [
+                "Review and update security policies regularly",
+                "Conduct periodic CSF alignment assessments",
+                "Integrate DMARRSS with SIEM for centralized monitoring",
+                "Provide security awareness training to staff",
+                "Document incident response procedures",
+            ]
+        )
 
         return recommendations
 
     def generate_executive_summary(self) -> dict[str, Any]:
         """
         Generate executive-friendly summary.
-        
+
         Returns:
             Executive summary dictionary
         """
@@ -366,10 +364,10 @@ class CSFReporter:
     def save_csf_report(self, report: dict[str, Any] | None = None) -> Path:
         """
         Save CSF alignment report to JSON file.
-        
+
         Args:
             report: Report data (if None, will generate)
-            
+
         Returns:
             Path to saved report file
         """
@@ -380,12 +378,12 @@ class CSFReporter:
         filename = f"csf_report_{timestamp}.json"
         filepath = self.reports_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(report, f, indent=2)
 
         # Also save as latest.json
         latest_path = self.reports_dir / "latest.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(report, f, indent=2)
 
         logger.info(f"CSF report saved to {filepath}")
@@ -394,10 +392,10 @@ class CSFReporter:
     def save_executive_summary(self, summary: dict[str, Any] | None = None) -> Path:
         """
         Save executive summary to JSON file.
-        
+
         Args:
             summary: Summary data (if None, will generate)
-            
+
         Returns:
             Path to saved summary file
         """
@@ -408,12 +406,12 @@ class CSFReporter:
         filename = f"executive_summary_{timestamp}.json"
         filepath = self.reports_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(summary, f, indent=2)
 
         # Also save as latest_summary.json
         latest_path = self.reports_dir / "latest_summary.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(summary, f, indent=2)
 
         logger.info(f"Executive summary saved to {filepath}")

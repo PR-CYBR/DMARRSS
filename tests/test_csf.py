@@ -1,14 +1,14 @@
-import json
 import tempfile
-import pytest
 from pathlib import Path
 
+import pytest
+
+from dmarrss.csf.anomaly_detector import AnomalyDetector
 from dmarrss.csf.asset_inventory import AssetInventory
-from dmarrss.csf.security_baseline import SecurityBaseline
-from dmarrss.csf.anomaly_detector import AnomalyDetector, Anomaly
-from dmarrss.csf.threat_intel import ThreatIntelligence, ThreatMatch
-from dmarrss.csf.recovery import RecoveryManager, RecoveryAction
 from dmarrss.csf.csf_reporting import CSFReporter
+from dmarrss.csf.recovery import RecoveryManager
+from dmarrss.csf.security_baseline import SecurityBaseline
+from dmarrss.csf.threat_intel import ThreatIntelligence
 
 
 @pytest.fixture
@@ -49,7 +49,7 @@ class TestAssetInventory:
         """Test system information collection"""
         inventory = AssetInventory(test_config)
         system_info = inventory.collect_system_info()
-        
+
         assert "hostname" in system_info
         assert "platform" in system_info
         assert "architecture" in system_info
@@ -58,7 +58,7 @@ class TestAssetInventory:
         """Test network information collection"""
         inventory = AssetInventory(test_config)
         network_info = inventory.collect_network_info()
-        
+
         # Network info may be empty if psutil not available
         assert isinstance(network_info, dict)
 
@@ -66,7 +66,7 @@ class TestAssetInventory:
         """Test process information collection"""
         inventory = AssetInventory(test_config)
         processes = inventory.collect_process_info()
-        
+
         # Processes list should be a list (may be empty if psutil not available)
         assert isinstance(processes, list)
 
@@ -74,7 +74,7 @@ class TestAssetInventory:
         """Test complete inventory collection"""
         inventory = AssetInventory(test_config)
         data = inventory.collect_all()
-        
+
         assert "timestamp" in data
         assert "csf_function" in data
         assert data["csf_function"] == "IDENTIFY"
@@ -85,11 +85,11 @@ class TestAssetInventory:
     def test_save_and_load_inventory(self, test_config):
         """Test saving and loading inventory"""
         inventory = AssetInventory(test_config)
-        
+
         # Save inventory
         filepath = inventory.save_inventory()
         assert filepath.exists()
-        
+
         # Load inventory
         loaded = inventory.load_inventory()
         assert "timestamp" in loaded
@@ -109,18 +109,18 @@ class TestSecurityBaseline:
         """Test running all security checks"""
         baseline = SecurityBaseline(test_config)
         findings = baseline.run_all_checks()
-        
+
         # Should return a list of findings (may be empty)
         assert isinstance(findings, list)
 
     def test_save_and_load_findings(self, test_config):
         """Test saving and loading findings"""
         baseline = SecurityBaseline(test_config)
-        
+
         # Run checks and save
         filepath = baseline.save_findings()
         assert filepath.exists()
-        
+
         # Load findings
         loaded = baseline.load_findings()
         assert "timestamp" in loaded
@@ -141,7 +141,7 @@ class TestAnomalyDetector:
     def test_detect_process_anomalies(self, test_config):
         """Test process anomaly detection"""
         detector = AnomalyDetector(test_config)
-        
+
         # Create mock baseline
         detector.baseline = {
             "processes": [
@@ -149,23 +149,23 @@ class TestAnomalyDetector:
                 {"name": "python", "pid": 100},
             ]
         }
-        
+
         # Create current processes with new process
         current_processes = [
             {"name": "systemd", "pid": 1},
             {"name": "python", "pid": 100},
             {"name": "malware", "pid": 999},
         ]
-        
+
         anomalies = detector.detect_process_anomalies(current_processes)
-        
+
         # Should detect new process
         assert isinstance(anomalies, list)
 
     def test_detect_network_anomalies(self, test_config):
         """Test network anomaly detection"""
         detector = AnomalyDetector(test_config)
-        
+
         # Create mock baseline
         detector.baseline = {
             "network": {
@@ -175,7 +175,7 @@ class TestAnomalyDetector:
                 ]
             }
         }
-        
+
         # Create current network with new port
         current_network = {
             "listening_ports": [
@@ -184,9 +184,9 @@ class TestAnomalyDetector:
                 {"port": 4444, "address": "0.0.0.0"},  # Suspicious port
             ]
         }
-        
+
         anomalies = detector.detect_network_anomalies(current_network)
-        
+
         # Should detect new port
         assert isinstance(anomalies, list)
         if len(anomalies) > 0:
@@ -206,7 +206,7 @@ class TestThreatIntelligence:
         """Test loading built-in threat feeds"""
         intel = ThreatIntelligence(test_config)
         intel.load_feeds()
-        
+
         # Should have some IoCs loaded
         assert len(intel.iocs["ips"]) > 0
         assert len(intel.iocs["domains"]) > 0
@@ -216,13 +216,13 @@ class TestThreatIntelligence:
         """Test IP checking"""
         intel = ThreatIntelligence(test_config)
         intel.load_feeds()
-        
+
         # Check malicious IP
         match = intel.check_ip("203.0.113.50")
         assert match is not None
         assert match.ioc_type == "ip"
         assert match.ioc_value == "203.0.113.50"
-        
+
         # Check clean IP
         match = intel.check_ip("8.8.8.8")
         assert match is None
@@ -231,7 +231,7 @@ class TestThreatIntelligence:
         """Test event scanning for IoCs"""
         intel = ThreatIntelligence(test_config)
         intel.load_feeds()
-        
+
         # Event with malicious IP
         event = {
             "src_ip": "203.0.113.50",
@@ -239,7 +239,7 @@ class TestThreatIntelligence:
             "signature": "Test alert",
             "raw": {},
         }
-        
+
         matches = intel.scan_event(event)
         assert len(matches) > 0
         assert matches[0].ioc_type == "ip"
@@ -257,29 +257,29 @@ class TestRecoveryManager:
     def test_track_change(self, test_config):
         """Test change tracking"""
         recovery = RecoveryManager(test_config)
-        
+
         recovery.track_change(
             change_type="service_stopped",
             description="Stopped malicious service",
             details={"service_name": "bad_service"},
         )
-        
+
         assert len(recovery.changes_made) == 1
         assert recovery.changes_made[0]["type"] == "service_stopped"
 
     def test_generate_recovery_report(self, test_config):
         """Test recovery report generation"""
         recovery = RecoveryManager(test_config)
-        
+
         # Add some changes
         recovery.track_change(
             change_type="service_stopped",
             description="Stopped service",
             details={"service_name": "test"},
         )
-        
+
         report = recovery.generate_recovery_report()
-        
+
         assert "timestamp" in report
         assert "csf_function" in report
         assert report["csf_function"] == "RECOVER"
@@ -299,30 +299,26 @@ class TestCSFReporter:
     def test_log_activity(self, test_config):
         """Test activity logging"""
         reporter = CSFReporter(test_config)
-        
+
         reporter.log_activity(
             csf_function="IDENTIFY",
             category="ID.AM - Asset Management",
             description="Asset inventory collected",
             details={"count": 100},
         )
-        
+
         assert len(reporter.activities["IDENTIFY"]) == 1
 
     def test_generate_csf_alignment_report(self, test_config):
         """Test CSF alignment report generation"""
         reporter = CSFReporter(test_config)
-        
+
         # Log some activities
-        reporter.log_activity(
-            "IDENTIFY", "ID.AM", "Test activity", {}
-        )
-        reporter.log_activity(
-            "DETECT", "DE.CM", "Test detection", {}
-        )
-        
+        reporter.log_activity("IDENTIFY", "ID.AM", "Test activity", {})
+        reporter.log_activity("DETECT", "DE.CM", "Test detection", {})
+
         report = reporter.generate_csf_alignment_report()
-        
+
         assert "timestamp" in report
         assert "report_type" in report
         assert "summary" in report
@@ -332,11 +328,11 @@ class TestCSFReporter:
     def test_generate_executive_summary(self, test_config):
         """Test executive summary generation"""
         reporter = CSFReporter(test_config)
-        
+
         reporter.log_activity("IDENTIFY", "ID.AM", "Test", {})
-        
+
         summary = reporter.generate_executive_summary()
-        
+
         assert "timestamp" in summary
         assert "report_type" in summary
         assert "overview" in summary

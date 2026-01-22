@@ -53,7 +53,7 @@ class SecurityFinding:
 class SecurityBaseline:
     """
     Cross-platform security baseline checker.
-    
+
     Implements NIST CSF 2.0 Protect function by checking:
     - Firewall status
     - Antivirus/security software presence
@@ -64,7 +64,7 @@ class SecurityBaseline:
     def __init__(self, config: dict):
         """
         Initialize security baseline checker.
-        
+
         Args:
             config: Configuration dictionary
         """
@@ -159,7 +159,7 @@ class SecurityBaseline:
             )
             if result.returncode == 0:
                 # Check if there are any rules
-                lines = result.stdout.split('\n')
+                lines = result.stdout.split("\n")
                 if len(lines) < 10:  # Very few rules might indicate no firewall
                     self.findings.append(
                         SecurityFinding(
@@ -284,7 +284,11 @@ class SecurityBaseline:
 
         try:
             result = subprocess.run(
-                ["powershell", "-Command", "Get-MpComputerStatus | Select-Object -Property RealTimeProtectionEnabled, AntivirusEnabled"],
+                [
+                    "powershell",
+                    "-Command",
+                    "Get-MpComputerStatus | Select-Object -Property RealTimeProtectionEnabled, AntivirusEnabled",
+                ],
                 capture_output=True,
                 text=True,
                 timeout=10,
@@ -438,13 +442,13 @@ class SecurityBaseline:
                     )
                 )
 
-        except (PermissionError, IOError) as e:
+        except (OSError, PermissionError) as e:
             logger.warning(f"Cannot read SSH config: {e}")
 
     def run_all_checks(self) -> list[SecurityFinding]:
         """
         Run all security baseline checks.
-        
+
         Returns:
             List of security findings
         """
@@ -462,10 +466,10 @@ class SecurityBaseline:
     def save_findings(self, findings: list[SecurityFinding] | None = None) -> Path:
         """
         Save findings to JSON file.
-        
+
         Args:
             findings: List of findings (if None, will run checks)
-            
+
         Returns:
             Path to saved findings file
         """
@@ -491,12 +495,12 @@ class SecurityBaseline:
         filename = f"findings_{timestamp}.json"
         filepath = self.findings_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(findings_data, f, indent=2)
 
         # Also save as latest.json
         latest_path = self.findings_dir / "latest.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(findings_data, f, indent=2)
 
         logger.info(f"Findings saved to {filepath}")
@@ -505,10 +509,10 @@ class SecurityBaseline:
     def load_findings(self, filepath: str | Path | None = None) -> dict[str, Any]:
         """
         Load findings from JSON file.
-        
+
         Args:
             filepath: Path to findings file (defaults to latest.json)
-            
+
         Returns:
             Findings dictionary
         """

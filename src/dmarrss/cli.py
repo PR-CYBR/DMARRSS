@@ -191,7 +191,7 @@ def collect_inventory(
 ):
     """
     Collect system asset inventory (NIST CSF Identify function).
-    
+
     Catalogs OS info, processes, network, users, and software.
     """
     typer.echo("Collecting asset inventory...")
@@ -201,10 +201,10 @@ def collect_inventory(
 
         config_data = load_config(config)
         inventory = AssetInventory(config_data)
-        
+
         # Collect and save inventory
         filepath = inventory.save_inventory()
-        
+
         typer.echo(f"✓ Asset inventory saved to {filepath}")
 
     except Exception as e:
@@ -220,7 +220,7 @@ def check_baseline(
 ):
     """
     Check security baseline (NIST CSF Protect function).
-    
+
     Verifies firewall, antivirus, logging, and configurations.
     """
     typer.echo("Checking security baseline...")
@@ -230,15 +230,15 @@ def check_baseline(
 
         config_data = load_config(config)
         baseline = SecurityBaseline(config_data)
-        
+
         # Run checks and save findings
         filepath = baseline.save_findings()
-        
+
         # Load and display summary
         findings_data = baseline.load_findings()
         summary = findings_data.get("summary", {})
-        
-        typer.echo(f"\n✓ Security baseline check complete")
+
+        typer.echo("\n✓ Security baseline check complete")
         typer.echo(f"  Total findings: {summary.get('total', 0)}")
         typer.echo(f"  Critical: {summary.get('critical', 0)}")
         typer.echo(f"  High: {summary.get('high', 0)}")
@@ -259,29 +259,29 @@ def detect_anomalies(
 ):
     """
     Detect anomalies from baseline (NIST CSF Detect function).
-    
+
     Compares current state against baseline inventory.
     """
     typer.echo("Detecting anomalies...")
 
     try:
-        from .csf.asset_inventory import AssetInventory
         from .csf.anomaly_detector import AnomalyDetector
+        from .csf.asset_inventory import AssetInventory
 
         config_data = load_config(config)
-        
+
         # Collect current inventory
         inventory = AssetInventory(config_data)
         current = inventory.collect_all()
-        
+
         # Detect anomalies
         detector = AnomalyDetector(config_data)
         detector.load_baseline()
         anomalies = detector.detect_all_anomalies(current)
         filepath = detector.save_anomalies(anomalies)
-        
+
         # Display summary
-        typer.echo(f"\n✓ Anomaly detection complete")
+        typer.echo("\n✓ Anomaly detection complete")
         typer.echo(f"  Total anomalies: {len(anomalies)}")
         high_count = sum(1 for a in anomalies if a.severity == "HIGH")
         medium_count = sum(1 for a in anomalies if a.severity == "MEDIUM")
@@ -304,7 +304,7 @@ def update_threat_intel(
 ):
     """
     Update threat intelligence feeds (NIST CSF Detect function).
-    
+
     Loads IoCs from configured threat feeds.
     """
     typer.echo("Updating threat intelligence feeds...")
@@ -314,12 +314,12 @@ def update_threat_intel(
 
         config_data = load_config(config)
         intel = ThreatIntelligence(config_data)
-        
+
         # Load feeds
         intel.load_feeds()
         intel.mark_updated()
-        
-        typer.echo(f"✓ Threat intelligence updated")
+
+        typer.echo("✓ Threat intelligence updated")
         typer.echo(f"  IPs: {len(intel.iocs['ips'])}")
         typer.echo(f"  Domains: {len(intel.iocs['domains'])}")
         typer.echo(f"  Hashes: {len(intel.iocs['hashes'])}")
@@ -338,7 +338,7 @@ def generate_csf_report(
 ):
     """
     Generate NIST CSF alignment report (NIST CSF Govern function).
-    
+
     Provides governance and compliance reporting.
     """
     typer.echo("Generating CSF report...")
@@ -348,17 +348,17 @@ def generate_csf_report(
 
         config_data = load_config(config)
         reporter = CSFReporter(config_data)
-        
+
         if executive:
             filepath = reporter.save_executive_summary()
             typer.echo(f"✓ Executive summary saved to {filepath}")
         else:
             filepath = reporter.save_csf_report()
-            
-            # Load and display summary
-            report = reporter.load_activities_from_data()
-            
-            typer.echo(f"✓ CSF alignment report generated")
+
+            # Load activities from data
+            reporter.load_activities_from_data()
+
+            typer.echo("✓ CSF alignment report generated")
             typer.echo(f"  Report saved to {filepath}")
 
     except Exception as e:

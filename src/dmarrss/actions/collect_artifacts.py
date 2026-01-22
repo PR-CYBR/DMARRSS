@@ -6,7 +6,6 @@ NIST CSF 2.0 Mapping: RS.AN (Analysis)
 
 import json
 import logging
-import shutil
 from datetime import datetime
 from pathlib import Path
 
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 class CollectArtifactsAction(BaseAction):
     """
     Collect forensic artifacts before remediation.
-    
+
     Preserves evidence for post-incident analysis.
     """
 
@@ -42,22 +41,30 @@ class CollectArtifactsAction(BaseAction):
 
             # Collect decision details
             decision_file = incident_dir / "decision.json"
-            with open(decision_file, 'w') as f:
-                json.dump({
-                    "decision_id": decision.decision_id,
-                    "event_id": decision.event_id,
-                    "severity": decision.severity,
-                    "threat_score": decision.threat_score,
-                    "score_components": decision.score_components,
-                    "timestamp": decision.timestamp.isoformat() if hasattr(decision.timestamp, 'isoformat') else str(decision.timestamp),
-                    "why": decision.why,
-                }, f, indent=2)
+            with open(decision_file, "w") as f:
+                json.dump(
+                    {
+                        "decision_id": decision.decision_id,
+                        "event_id": decision.event_id,
+                        "severity": decision.severity,
+                        "threat_score": decision.threat_score,
+                        "score_components": decision.score_components,
+                        "timestamp": (
+                            decision.timestamp.isoformat()
+                            if hasattr(decision.timestamp, "isoformat")
+                            else str(decision.timestamp)
+                        ),
+                        "why": decision.why,
+                    },
+                    f,
+                    indent=2,
+                )
             artifacts_collected.append(str(decision_file))
 
             # Collect event details if available
-            if hasattr(decision, 'event_data') and decision.event_data:
+            if hasattr(decision, "event_data") and decision.event_data:
                 event_file = incident_dir / "event.json"
-                with open(event_file, 'w') as f:
+                with open(event_file, "w") as f:
                     json.dump(decision.event_data, f, indent=2)
                 artifacts_collected.append(str(event_file))
 
@@ -65,13 +72,13 @@ class CollectArtifactsAction(BaseAction):
             details = decision.score_components
             if "process_info" in details:
                 process_file = incident_dir / "process_info.json"
-                with open(process_file, 'w') as f:
+                with open(process_file, "w") as f:
                     json.dump(details["process_info"], f, indent=2)
                 artifacts_collected.append(str(process_file))
 
             if "network_info" in details:
                 network_file = incident_dir / "network_info.json"
-                with open(network_file, 'w') as f:
+                with open(network_file, "w") as f:
                     json.dump(details["network_info"], f, indent=2)
                 artifacts_collected.append(str(network_file))
 
@@ -85,7 +92,7 @@ class CollectArtifactsAction(BaseAction):
             }
 
             manifest_file = incident_dir / "manifest.json"
-            with open(manifest_file, 'w') as f:
+            with open(manifest_file, "w") as f:
                 json.dump(manifest, f, indent=2)
 
             message = f"Artifacts collected to {incident_dir}"

@@ -60,8 +60,7 @@ class Store:
     def _init_schema(self) -> None:
         """Create database schema if it doesn't exist"""
         with self._get_conn() as conn:
-            conn.executescript(
-                """
+            conn.executescript("""
                 CREATE TABLE IF NOT EXISTS events (
                     event_id TEXT PRIMARY KEY,
                     source TEXT NOT NULL,
@@ -118,8 +117,7 @@ class Store:
                     offset INTEGER NOT NULL,
                     updated_at REAL DEFAULT (julianday('now'))
                 );
-                """
-            )
+                """)
 
     def insert_event(self, event: Event) -> None:
         """Insert or update an event"""

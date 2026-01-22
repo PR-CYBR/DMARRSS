@@ -2,12 +2,12 @@
 
 from .base import Action, BaseAction
 from .block_ip import BlockIPAction
+from .collect_artifacts import CollectArtifactsAction
+from .disable_account import DisableAccountAction
 from .isolate_host import IsolateHostAction
 from .notify_webhook import NotifyWebhookAction
-from .terminate_process import TerminateProcessAction
 from .quarantine_network import QuarantineNetworkAction
-from .disable_account import DisableAccountAction
-from .collect_artifacts import CollectArtifactsAction
+from .terminate_process import TerminateProcessAction
 
 __all__ = [
     "Action",

@@ -5,8 +5,6 @@ NIST CSF 2.0 Mapping: RS.MI (Mitigation)
 """
 
 import logging
-import platform
-from typing import Any
 
 from ..actions.base import BaseAction
 from ..schemas import ActionResult, Decision
@@ -17,7 +15,7 @@ logger = logging.getLogger(__name__)
 class TerminateProcessAction(BaseAction):
     """
     Terminate a malicious process.
-    
+
     Enhanced version with better error handling and logging.
     """
 
@@ -29,7 +27,7 @@ class TerminateProcessAction(BaseAction):
         # Extract process information from decision context
         details = decision.score_components
         process_info = details.get("process_info", {})
-        
+
         if not process_info:
             return self._create_result(
                 decision=decision,
@@ -42,7 +40,7 @@ class TerminateProcessAction(BaseAction):
 
         try:
             import psutil
-            
+
             pid = process_info.get("pid")
             if not pid:
                 return self._create_result(
@@ -53,17 +51,17 @@ class TerminateProcessAction(BaseAction):
                     message="No PID specified",
                     error="Missing PID",
                 )
-            
+
             # Terminate the process
             process = psutil.Process(pid)
             process_name = process.name()
             process.terminate()
-            
+
             # Wait for process to terminate
             process.wait(timeout=5)
-            
+
             logger.info(f"Process terminated: {process_name} (PID: {pid})")
-            
+
             return self._create_result(
                 decision=decision,
                 success=True,
@@ -77,7 +75,7 @@ class TerminateProcessAction(BaseAction):
                     "csf_category": "RS.MI - Mitigation",
                 },
             )
-            
+
         except ImportError:
             return self._create_result(
                 decision=decision,
@@ -104,7 +102,7 @@ class TerminateProcessAction(BaseAction):
         process_info = details.get("process_info", {})
         pid = process_info.get("pid", "UNKNOWN")
         process_name = process_info.get("name", "UNKNOWN")
-        
+
         message = f"[DRY-RUN] Would terminate process: {process_name} (PID: {pid})"
         logger.info(message)
 

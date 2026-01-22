@@ -56,7 +56,7 @@ class Anomaly:
 class AnomalyDetector:
     """
     Anomaly detection using baseline comparison.
-    
+
     Implements NIST CSF 2.0 Detect function by identifying:
     - New/unusual processes
     - Abnormal network connections
@@ -67,7 +67,7 @@ class AnomalyDetector:
     def __init__(self, config: dict):
         """
         Initialize anomaly detector.
-        
+
         Args:
             config: Configuration dictionary
         """
@@ -88,7 +88,7 @@ class AnomalyDetector:
     def load_baseline(self, baseline_data: dict[str, Any] | None = None) -> None:
         """
         Load baseline data for comparison.
-        
+
         Args:
             baseline_data: Baseline inventory data (if None, loads from inventory/latest.json)
         """
@@ -107,10 +107,10 @@ class AnomalyDetector:
     def detect_process_anomalies(self, current_processes: list[dict[str, Any]]) -> list[Anomaly]:
         """
         Detect process anomalies compared to baseline.
-        
+
         Args:
             current_processes: Current list of running processes
-            
+
         Returns:
             List of detected anomalies
         """
@@ -166,33 +166,47 @@ class AnomalyDetector:
     def _is_common_process(self, process_name: str) -> bool:
         """
         Check if a process is commonly found on systems.
-        
+
         Note: This list is a basic set of common system processes.
         In production, this should be configurable per environment via config.
         """
         # Get custom common processes from config if available
         anomaly_config = self.config.get("anomaly_detection", {})
         custom_common = anomaly_config.get("common_processes", [])
-        
+
         # Default common processes
         common_processes = {
-            "systemd", "kthreadd", "rcu_sched", "bash", "sh", "sshd",
-            "cron", "dbus-daemon", "systemd-journal", "python", "python3",
-            "node", "java", "docker", "containerd", "nginx", "apache2",
+            "systemd",
+            "kthreadd",
+            "rcu_sched",
+            "bash",
+            "sh",
+            "sshd",
+            "cron",
+            "dbus-daemon",
+            "systemd-journal",
+            "python",
+            "python3",
+            "node",
+            "java",
+            "docker",
+            "containerd",
+            "nginx",
+            "apache2",
         }
-        
+
         # Add custom processes from config
         common_processes.update(custom_common)
-        
+
         return process_name.lower() in common_processes
 
     def detect_network_anomalies(self, current_network: dict[str, Any]) -> list[Anomaly]:
         """
         Detect network anomalies compared to baseline.
-        
+
         Args:
             current_network: Current network information
-            
+
         Returns:
             List of detected anomalies
         """
@@ -204,12 +218,8 @@ class AnomalyDetector:
         baseline_network = self.baseline.get("network", {})
 
         # Compare listening ports
-        baseline_ports = {
-            p.get("port") for p in baseline_network.get("listening_ports", [])
-        }
-        current_ports = {
-            p.get("port") for p in current_network.get("listening_ports", [])
-        }
+        baseline_ports = {p.get("port") for p in baseline_network.get("listening_ports", [])}
+        current_ports = {p.get("port") for p in current_network.get("listening_ports", [])}
 
         # Detect new listening ports
         new_ports = current_ports - baseline_ports
@@ -246,10 +256,10 @@ class AnomalyDetector:
     def detect_user_anomalies(self, current_users: list[dict[str, Any]]) -> list[Anomaly]:
         """
         Detect user account and activity anomalies.
-        
+
         Args:
             current_users: Current user sessions
-            
+
         Returns:
             List of detected anomalies
         """
@@ -303,10 +313,10 @@ class AnomalyDetector:
     def detect_all_anomalies(self, current_inventory: dict[str, Any]) -> list[Anomaly]:
         """
         Detect all types of anomalies.
-        
+
         Args:
             current_inventory: Current system inventory
-            
+
         Returns:
             List of all detected anomalies
         """
@@ -322,21 +332,15 @@ class AnomalyDetector:
 
         # Detect process anomalies
         if "processes" in current_inventory:
-            self.anomalies.extend(
-                self.detect_process_anomalies(current_inventory["processes"])
-            )
+            self.anomalies.extend(self.detect_process_anomalies(current_inventory["processes"]))
 
         # Detect network anomalies
         if "network" in current_inventory:
-            self.anomalies.extend(
-                self.detect_network_anomalies(current_inventory["network"])
-            )
+            self.anomalies.extend(self.detect_network_anomalies(current_inventory["network"]))
 
         # Detect user anomalies
         if "users" in current_inventory:
-            self.anomalies.extend(
-                self.detect_user_anomalies(current_inventory["users"])
-            )
+            self.anomalies.extend(self.detect_user_anomalies(current_inventory["users"]))
 
         logger.info(f"Anomaly detection complete: {len(self.anomalies)} anomalies found")
         return self.anomalies
@@ -344,10 +348,10 @@ class AnomalyDetector:
     def save_anomalies(self, anomalies: list[Anomaly] | None = None) -> Path:
         """
         Save anomalies to JSON file.
-        
+
         Args:
             anomalies: List of anomalies (if None, uses self.anomalies)
-            
+
         Returns:
             Path to saved anomalies file
         """
@@ -371,12 +375,12 @@ class AnomalyDetector:
         filename = f"anomalies_{timestamp}.json"
         filepath = self.anomaly_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(anomaly_data, f, indent=2)
 
         # Also save as latest.json
         latest_path = self.anomaly_dir / "latest.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(anomaly_data, f, indent=2)
 
         logger.info(f"Anomalies saved to {filepath}")

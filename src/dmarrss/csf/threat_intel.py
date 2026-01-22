@@ -6,7 +6,6 @@ This module integrates external threat intelligence feeds to detect known threat
 NIST CSF 2.0 Mapping: DE.CM (Continuous Monitoring), DE.DP (Detection Processes)
 """
 
-import hashlib
 import json
 import logging
 from datetime import datetime, timedelta
@@ -54,7 +53,7 @@ class ThreatMatch:
 class ThreatIntelligence:
     """
     Threat intelligence feed integration.
-    
+
     Implements NIST CSF 2.0 Detect function by:
     - Fetching IoCs from threat feeds
     - Comparing IoCs against system data
@@ -64,7 +63,7 @@ class ThreatIntelligence:
     def __init__(self, config: dict):
         """
         Initialize threat intelligence module.
-        
+
         Args:
             config: Configuration dictionary
         """
@@ -115,7 +114,7 @@ class ThreatIntelligence:
         malicious_ips = [
             "198.51.100.1",  # Example malicious IP
             "203.0.113.50",  # Example from sample data
-            "192.0.2.1",     # TEST-NET-1
+            "192.0.2.1",  # TEST-NET-1
         ]
         self.iocs["ips"].update(malicious_ips)
 
@@ -137,7 +136,7 @@ class ThreatIntelligence:
     def _load_feed(self, feed_name: str, feed_config: dict) -> None:
         """
         Load a specific threat feed.
-        
+
         Args:
             feed_name: Name of the feed
             feed_config: Feed configuration
@@ -188,7 +187,7 @@ class ThreatIntelligence:
                 self._parse_feed_data(data)
             else:
                 # Plain text
-                for line in response.text.split('\n'):
+                for line in response.text.split("\n"):
                     line = line.strip()
                     if line and not line.startswith("#"):
                         self._add_indicator(line)
@@ -229,7 +228,7 @@ class ThreatIntelligence:
 
     def _is_ip(self, value: str) -> bool:
         """Check if value is an IP address"""
-        parts = value.split('.')
+        parts = value.split(".")
         if len(parts) != 4:
             return False
         try:
@@ -239,7 +238,7 @@ class ThreatIntelligence:
 
     def _is_domain(self, value: str) -> bool:
         """Check if value is a domain"""
-        return '.' in value and not self._is_ip(value)
+        return "." in value and not self._is_ip(value)
 
     def _is_hash(self, value: str) -> bool:
         """Check if value is a hash (MD5, SHA1, SHA256)"""
@@ -247,14 +246,16 @@ class ThreatIntelligence:
             return False
         return len(value) in [32, 40, 64]  # MD5, SHA1, SHA256
 
-    def check_ip(self, ip_address: str, context: dict[str, Any] | None = None) -> ThreatMatch | None:
+    def check_ip(
+        self, ip_address: str, context: dict[str, Any] | None = None
+    ) -> ThreatMatch | None:
         """
         Check if an IP is in threat intel.
-        
+
         Args:
             ip_address: IP address to check
             context: Additional context
-            
+
         Returns:
             ThreatMatch if found, None otherwise
         """
@@ -269,14 +270,16 @@ class ThreatIntelligence:
             )
         return None
 
-    def check_domain(self, domain: str, context: dict[str, Any] | None = None) -> ThreatMatch | None:
+    def check_domain(
+        self, domain: str, context: dict[str, Any] | None = None
+    ) -> ThreatMatch | None:
         """
         Check if a domain is in threat intel.
-        
+
         Args:
             domain: Domain to check
             context: Additional context
-            
+
         Returns:
             ThreatMatch if found, None otherwise
         """
@@ -291,14 +294,16 @@ class ThreatIntelligence:
             )
         return None
 
-    def check_file_hash(self, file_hash: str, context: dict[str, Any] | None = None) -> ThreatMatch | None:
+    def check_file_hash(
+        self, file_hash: str, context: dict[str, Any] | None = None
+    ) -> ThreatMatch | None:
         """
         Check if a file hash is in threat intel.
-        
+
         Args:
             file_hash: File hash to check (MD5, SHA1, or SHA256)
             context: Additional context
-            
+
         Returns:
             ThreatMatch if found, None otherwise
         """
@@ -317,10 +322,10 @@ class ThreatIntelligence:
     def scan_event(self, event: dict[str, Any]) -> list[ThreatMatch]:
         """
         Scan an event for threat indicators.
-        
+
         Args:
             event: Event dictionary to scan
-            
+
         Returns:
             List of threat matches
         """
@@ -360,10 +365,10 @@ class ThreatIntelligence:
     def save_matches(self, matches: list[ThreatMatch] | None = None) -> Path:
         """
         Save threat matches to JSON file.
-        
+
         Args:
             matches: List of matches (if None, uses self.matches)
-            
+
         Returns:
             Path to saved matches file
         """
@@ -387,12 +392,12 @@ class ThreatIntelligence:
         filename = f"threat_matches_{timestamp}.json"
         filepath = self.intel_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(match_data, f, indent=2)
 
         # Also save as latest.json
         latest_path = self.intel_dir / "latest.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(match_data, f, indent=2)
 
         logger.info(f"Threat matches saved to {filepath}")
@@ -417,5 +422,5 @@ class ThreatIntelligence:
     def mark_updated(self) -> None:
         """Mark feeds as updated"""
         last_update_file = self.intel_dir / "last_update.txt"
-        with open(last_update_file, 'w') as f:
+        with open(last_update_file, "w") as f:
             f.write(datetime.utcnow().isoformat())

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class QuarantineNetworkAction(BaseAction):
     """
     Quarantine host by disabling network connectivity.
-    
+
     Platform-specific implementation for network isolation.
     """
 
@@ -107,37 +107,44 @@ class QuarantineNetworkAction(BaseAction):
                 text=True,
                 timeout=10,
             )
-            
+
             if result.returncode != 0:
                 logger.error("Failed to enumerate network interfaces")
                 return False
-            
+
             # Disable all active interfaces
             success_count = 0
-            for line in result.stdout.split('\n'):
+            for line in result.stdout.split("\n"):
                 # Look for lines with "Connected" status
                 if "Connected" in line and "Enabled" in line:
                     # Extract interface name (typically after multiple spaces)
                     parts = line.split()
                     if len(parts) >= 4:
                         # Interface name is typically the last part
-                        interface_name = ' '.join(parts[3:])
+                        interface_name = " ".join(parts[3:])
                         disable_result = subprocess.run(
-                            ["netsh", "interface", "set", "interface", interface_name, "admin=DISABLE"],
+                            [
+                                "netsh",
+                                "interface",
+                                "set",
+                                "interface",
+                                interface_name,
+                                "admin=DISABLE",
+                            ],
                             capture_output=True,
                             timeout=10,
                         )
                         if disable_result.returncode == 0:
                             success_count += 1
                             logger.info(f"Disabled interface: {interface_name}")
-            
+
             if success_count > 0:
                 logger.info(f"Windows network quarantined ({success_count} interfaces disabled)")
                 return True
             else:
                 logger.warning("No active interfaces found to disable")
                 return False
-                
+
         except (subprocess.CalledProcessError, FileNotFoundError) as e:
             logger.error(f"Failed to quarantine Windows network: {e}")
             return False

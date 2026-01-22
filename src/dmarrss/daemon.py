@@ -12,7 +12,6 @@ Runs continuous log processing pipeline with:
 
 import logging
 import sys
-import time
 from pathlib import Path
 
 from .actions import (
@@ -86,29 +85,53 @@ class DMADaemon:
 
         # Initialize CSF modules
         csf_config = config.get("csf", {})
-        self.asset_inventory = AssetInventory(config) if csf_config.get("asset_inventory", {}).get("enabled", True) else None
-        self.security_baseline = SecurityBaseline(config) if csf_config.get("security_baseline", {}).get("enabled", True) else None
-        self.anomaly_detector = AnomalyDetector(config) if csf_config.get("anomaly_detection", {}).get("enabled", True) else None
-        self.threat_intel = ThreatIntelligence(config) if csf_config.get("threat_intel", {}).get("enabled", True) else None
-        self.recovery_manager = RecoveryManager(config) if csf_config.get("recovery", {}).get("enabled", True) else None
-        self.csf_reporter = CSFReporter(config) if csf_config.get("reporting", {}).get("enabled", True) else None
+        self.asset_inventory = (
+            AssetInventory(config)
+            if csf_config.get("asset_inventory", {}).get("enabled", True)
+            else None
+        )
+        self.security_baseline = (
+            SecurityBaseline(config)
+            if csf_config.get("security_baseline", {}).get("enabled", True)
+            else None
+        )
+        self.anomaly_detector = (
+            AnomalyDetector(config)
+            if csf_config.get("anomaly_detection", {}).get("enabled", True)
+            else None
+        )
+        self.threat_intel = (
+            ThreatIntelligence(config)
+            if csf_config.get("threat_intel", {}).get("enabled", True)
+            else None
+        )
+        self.recovery_manager = (
+            RecoveryManager(config) if csf_config.get("recovery", {}).get("enabled", True) else None
+        )
+        self.csf_reporter = (
+            CSFReporter(config) if csf_config.get("reporting", {}).get("enabled", True) else None
+        )
 
         # Get dry-run mode
         self.dry_run = not config.get("system", {}).get("enforce", False)
 
         logger.info(f"DMARRSS daemon initialized (dry_run={self.dry_run})")
-        logger.info(f"CSF modules enabled: {sum(1 for m in [self.asset_inventory, self.security_baseline, self.anomaly_detector, self.threat_intel, self.recovery_manager, self.csf_reporter] if m is not None)}/6")
+        logger.info(
+            f"CSF modules enabled: {sum(1 for m in [self.asset_inventory, self.security_baseline, self.anomaly_detector, self.threat_intel, self.recovery_manager, self.csf_reporter] if m is not None)}/6"
+        )
 
     def run_csf_initialization(self) -> None:
         """
         Run NIST CSF initialization functions.
-        
+
         This runs at daemon start to establish baseline and security posture.
         """
         csf_config = self.config.get("csf", {})
-        
+
         # IDENTIFY: Collect asset inventory
-        if self.asset_inventory and csf_config.get("asset_inventory", {}).get("auto_collect_on_start", True):
+        if self.asset_inventory and csf_config.get("asset_inventory", {}).get(
+            "auto_collect_on_start", True
+        ):
             logger.info("Running asset inventory collection (NIST CSF Identify)...")
             try:
                 self.asset_inventory.save_inventory()
@@ -120,9 +143,11 @@ class DMADaemon:
                     )
             except Exception as e:
                 logger.error(f"Error collecting asset inventory: {e}")
-        
+
         # PROTECT: Run security baseline checks
-        if self.security_baseline and csf_config.get("security_baseline", {}).get("auto_check_on_start", False):
+        if self.security_baseline and csf_config.get("security_baseline", {}).get(
+            "auto_check_on_start", False
+        ):
             logger.info("Running security baseline checks (NIST CSF Protect)...")
             try:
                 self.security_baseline.save_findings()
@@ -134,7 +159,7 @@ class DMADaemon:
                     )
             except Exception as e:
                 logger.error(f"Error checking security baseline: {e}")
-        
+
         # DETECT: Update threat intelligence
         if self.threat_intel:
             if self.threat_intel.needs_update():
@@ -150,7 +175,7 @@ class DMADaemon:
                         )
                 except Exception as e:
                     logger.error(f"Error updating threat intelligence: {e}")
-        
+
         # DETECT: Load baseline for anomaly detection
         if self.anomaly_detector:
             try:
@@ -318,7 +343,7 @@ class DMADaemon:
     def run(self):
         """
         Run daemon in continuous mode with NIST CSF integration.
-        
+
         Executes:
         1. CSF initialization (Identify, Protect baseline)
         2. Event processing loop (Detect, Respond)
@@ -355,7 +380,7 @@ class DMADaemon:
     def run_csf_completion(self) -> None:
         """
         Run NIST CSF completion tasks after event processing.
-        
+
         This runs recovery and governance functions at the end.
         """
         csf_config = self.config.get("csf", {})
@@ -401,7 +426,9 @@ class DMADaemon:
                 logger.error(f"Error generating recovery report: {e}")
 
         # GOVERN: Generate CSF alignment report
-        if self.csf_reporter and csf_config.get("reporting", {}).get("auto_generate_on_complete", True):
+        if self.csf_reporter and csf_config.get("reporting", {}).get(
+            "auto_generate_on_complete", True
+        ):
             try:
                 logger.info("Generating CSF alignment report (NIST CSF Govern)...")
                 self.csf_reporter.save_csf_report()

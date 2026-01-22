@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class AssetInventory:
     """
     Cross-platform asset inventory collection.
-    
+
     Implements NIST CSF 2.0 Identify function by cataloging:
     - OS version and system information
     - Installed applications
@@ -33,7 +33,7 @@ class AssetInventory:
     def __init__(self, config: dict):
         """
         Initialize asset inventory collector.
-        
+
         Args:
             config: Configuration dictionary
         """
@@ -45,7 +45,7 @@ class AssetInventory:
     def collect_system_info(self) -> dict[str, Any]:
         """
         Collect OS version and system information.
-        
+
         Returns:
             Dictionary with system information
         """
@@ -66,7 +66,7 @@ class AssetInventory:
     def collect_network_info(self) -> dict[str, Any]:
         """
         Collect network interfaces and configuration.
-        
+
         Returns:
             Dictionary with network information
         """
@@ -77,22 +77,26 @@ class AssetInventory:
             for iface, addrs in psutil.net_if_addrs().items():
                 interfaces[iface] = []
                 for addr in addrs:
-                    interfaces[iface].append({
-                        "family": str(addr.family),
-                        "address": addr.address,
-                        "netmask": addr.netmask,
-                        "broadcast": addr.broadcast,
-                    })
+                    interfaces[iface].append(
+                        {
+                            "family": str(addr.family),
+                            "address": addr.address,
+                            "netmask": addr.netmask,
+                            "broadcast": addr.broadcast,
+                        }
+                    )
 
-            connections = psutil.net_connections(kind='inet')
+            connections = psutil.net_connections(kind="inet")
             listening_ports = []
             for conn in connections:
-                if conn.status == 'LISTEN':
-                    listening_ports.append({
-                        "port": conn.laddr.port,
-                        "address": conn.laddr.ip,
-                        "protocol": "tcp" if conn.type == 1 else "udp",
-                    })
+                if conn.status == "LISTEN":
+                    listening_ports.append(
+                        {
+                            "port": conn.laddr.port,
+                            "address": conn.laddr.ip,
+                            "protocol": "tcp" if conn.type == 1 else "udp",
+                        }
+                    )
 
             return {
                 "interfaces": interfaces,
@@ -108,7 +112,7 @@ class AssetInventory:
     def collect_process_info(self) -> list[dict[str, Any]]:
         """
         Collect running processes and services.
-        
+
         Returns:
             List of running processes
         """
@@ -116,16 +120,18 @@ class AssetInventory:
             import psutil
 
             processes = []
-            for proc in psutil.process_iter(['pid', 'name', 'username', 'status', 'create_time']):
+            for proc in psutil.process_iter(["pid", "name", "username", "status", "create_time"]):
                 try:
                     pinfo = proc.info
-                    processes.append({
-                        "pid": pinfo['pid'],
-                        "name": pinfo['name'],
-                        "username": pinfo.get('username', 'N/A'),
-                        "status": pinfo.get('status', 'N/A'),
-                        "create_time": pinfo.get('create_time', 0),
-                    })
+                    processes.append(
+                        {
+                            "pid": pinfo["pid"],
+                            "name": pinfo["name"],
+                            "username": pinfo.get("username", "N/A"),
+                            "status": pinfo.get("status", "N/A"),
+                            "create_time": pinfo.get("create_time", 0),
+                        }
+                    )
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
 
@@ -140,7 +146,7 @@ class AssetInventory:
     def collect_user_accounts(self) -> list[dict[str, Any]]:
         """
         Collect user accounts information.
-        
+
         Returns:
             List of user accounts
         """
@@ -149,12 +155,14 @@ class AssetInventory:
 
             users = []
             for user in psutil.users():
-                users.append({
-                    "name": user.name,
-                    "terminal": user.terminal,
-                    "host": user.host,
-                    "started": user.started,
-                })
+                users.append(
+                    {
+                        "name": user.name,
+                        "terminal": user.terminal,
+                        "host": user.host,
+                        "started": user.started,
+                    }
+                )
 
             return users
         except ImportError:
@@ -167,7 +175,7 @@ class AssetInventory:
     def collect_installed_software(self) -> list[dict[str, Any]]:
         """
         Collect installed applications (platform-specific).
-        
+
         Returns:
             List of installed software
         """
@@ -200,15 +208,17 @@ class AssetInventory:
                 timeout=30,
             )
             if result.returncode == 0:
-                for line in result.stdout.split('\n')[5:]:  # Skip header
+                for line in result.stdout.split("\n")[5:]:  # Skip header
                     if line.strip():
                         parts = line.split(None, 4)
                         if len(parts) >= 3:
-                            packages.append({
-                                "name": parts[1],
-                                "version": parts[2],
-                                "type": "deb",
-                            })
+                            packages.append(
+                                {
+                                    "name": parts[1],
+                                    "version": parts[2],
+                                    "type": "deb",
+                                }
+                            )
         except (FileNotFoundError, subprocess.TimeoutExpired):
             pass
 
@@ -222,15 +232,17 @@ class AssetInventory:
                     timeout=30,
                 )
                 if result.returncode == 0:
-                    for line in result.stdout.split('\n'):
+                    for line in result.stdout.split("\n"):
                         if line.strip():
-                            parts = line.split('\t')
+                            parts = line.split("\t")
                             if len(parts) >= 2:
-                                packages.append({
-                                    "name": parts[0],
-                                    "version": parts[1],
-                                    "type": "rpm",
-                                })
+                                packages.append(
+                                    {
+                                        "name": parts[0],
+                                        "version": parts[1],
+                                        "type": "rpm",
+                                    }
+                                )
             except (FileNotFoundError, subprocess.TimeoutExpired):
                 pass
 
@@ -245,7 +257,10 @@ class AssetInventory:
             # Check both 32-bit and 64-bit registry keys
             registry_paths = [
                 (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"),
-                (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"),
+                (
+                    winreg.HKEY_LOCAL_MACHINE,
+                    r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+                ),
             ]
 
             for hkey, path in registry_paths:
@@ -258,16 +273,18 @@ class AssetInventory:
                             try:
                                 name = winreg.QueryValueEx(subkey, "DisplayName")[0]
                                 version = winreg.QueryValueEx(subkey, "DisplayVersion")[0]
-                                programs.append({
-                                    "name": name,
-                                    "version": version,
-                                    "type": "windows",
-                                })
+                                programs.append(
+                                    {
+                                        "name": name,
+                                        "version": version,
+                                        "type": "windows",
+                                    }
+                                )
                             except FileNotFoundError:
                                 pass
                             finally:
                                 winreg.CloseKey(subkey)
-                        except:
+                        except Exception:
                             pass
                     winreg.CloseKey(key)
                 except FileNotFoundError:
@@ -294,13 +311,16 @@ class AssetInventory:
             )
             if result.returncode == 0:
                 import json
+
                 data = json.loads(result.stdout)
                 for app in data.get("SPApplicationsDataType", [])[:100]:
-                    apps.append({
-                        "name": app.get("_name", "Unknown"),
-                        "version": app.get("version", "Unknown"),
-                        "type": "macos",
-                    })
+                    apps.append(
+                        {
+                            "name": app.get("_name", "Unknown"),
+                            "version": app.get("version", "Unknown"),
+                            "type": "macos",
+                        }
+                    )
         except (FileNotFoundError, subprocess.TimeoutExpired, json.JSONDecodeError) as e:
             logger.error(f"Error collecting macOS applications: {e}")
 
@@ -309,7 +329,7 @@ class AssetInventory:
     def collect_all(self) -> dict[str, Any]:
         """
         Collect complete asset inventory.
-        
+
         Returns:
             Complete inventory dictionary
         """
@@ -336,10 +356,10 @@ class AssetInventory:
     def save_inventory(self, inventory: dict[str, Any] | None = None) -> Path:
         """
         Save inventory to JSON file.
-        
+
         Args:
             inventory: Inventory data (if None, will collect fresh data)
-            
+
         Returns:
             Path to saved inventory file
         """
@@ -350,12 +370,12 @@ class AssetInventory:
         filename = f"inventory_{timestamp}.json"
         filepath = self.inventory_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(inventory, f, indent=2)
 
         # Also save as latest.json for easy reference
         latest_path = self.inventory_dir / "latest.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(inventory, f, indent=2)
 
         logger.info(f"Inventory saved to {filepath}")
@@ -364,10 +384,10 @@ class AssetInventory:
     def load_inventory(self, filepath: str | Path | None = None) -> dict[str, Any]:
         """
         Load inventory from JSON file.
-        
+
         Args:
             filepath: Path to inventory file (defaults to latest.json)
-            
+
         Returns:
             Inventory dictionary
         """

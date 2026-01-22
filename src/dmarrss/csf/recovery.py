@@ -47,7 +47,7 @@ class RecoveryAction:
 class RecoveryManager:
     """
     Recovery management and guidance.
-    
+
     Implements NIST CSF 2.0 Recover function by:
     - Creating backups before changes
     - Tracking changes for reversion
@@ -58,7 +58,7 @@ class RecoveryManager:
     def __init__(self, config: dict):
         """
         Initialize recovery manager.
-        
+
         Args:
             config: Configuration dictionary
         """
@@ -75,11 +75,11 @@ class RecoveryManager:
     def create_backup(self, filepath: str | Path, description: str = "") -> Path | None:
         """
         Create a backup of a file before modification.
-        
+
         Args:
             filepath: Path to file to backup
             description: Description of why backup is being made
-            
+
         Returns:
             Path to backup file or None if backup failed
         """
@@ -96,13 +96,15 @@ class RecoveryManager:
 
             shutil.copy2(filepath, backup_path)
 
-            self.changes_made.append({
-                "type": "file_backup",
-                "original_path": str(filepath),
-                "backup_path": str(backup_path),
-                "description": description,
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            self.changes_made.append(
+                {
+                    "type": "file_backup",
+                    "original_path": str(filepath),
+                    "backup_path": str(backup_path),
+                    "description": description,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
             logger.info(f"Backup created: {backup_path}")
             return backup_path
@@ -114,10 +116,10 @@ class RecoveryManager:
     def restore_from_backup(self, backup_path: str | Path) -> bool:
         """
         Restore a file from backup.
-        
+
         Args:
             backup_path: Path to backup file
-            
+
         Returns:
             True if successful, False otherwise
         """
@@ -163,7 +165,7 @@ class RecoveryManager:
     def track_change(self, change_type: str, description: str, details: dict[str, Any]) -> None:
         """
         Track a change made during response.
-        
+
         Args:
             change_type: Type of change (service_stopped, firewall_rule, etc.)
             description: Human-readable description
@@ -181,10 +183,10 @@ class RecoveryManager:
     def revert_change(self, change: dict[str, Any]) -> bool:
         """
         Attempt to revert a tracked change.
-        
+
         Args:
             change: Change dictionary to revert
-            
+
         Returns:
             True if successful, False otherwise
         """
@@ -256,7 +258,7 @@ class RecoveryManager:
     def create_system_restore_point(self) -> bool:
         """
         Create a system restore point (Windows only).
-        
+
         Returns:
             True if successful, False otherwise
         """
@@ -300,7 +302,7 @@ class RecoveryManager:
     def generate_recovery_report(self) -> dict[str, Any]:
         """
         Generate a comprehensive recovery report.
-        
+
         Returns:
             Recovery report dictionary
         """
@@ -329,9 +331,7 @@ class RecoveryManager:
         recommendations = []
 
         # Check for stopped services
-        stopped_services = [
-            c for c in self.changes_made if c.get("type") == "service_stopped"
-        ]
+        stopped_services = [c for c in self.changes_made if c.get("type") == "service_stopped"]
         if stopped_services:
             recommendations.append(
                 f"Verify {len(stopped_services)} stopped service(s) can be safely restarted"
@@ -339,13 +339,10 @@ class RecoveryManager:
 
         # Check for firewall changes
         firewall_changes = [
-            c for c in self.changes_made
-            if c.get("type", "").startswith("firewall")
+            c for c in self.changes_made if c.get("type", "").startswith("firewall")
         ]
         if firewall_changes:
-            recommendations.append(
-                "Review firewall changes and test network connectivity"
-            )
+            recommendations.append("Review firewall changes and test network connectivity")
 
         # Check for file modifications
         file_changes = [
@@ -357,22 +354,24 @@ class RecoveryManager:
             )
 
         # General recommendations
-        recommendations.extend([
-            "Change all passwords for potentially compromised accounts",
-            "Apply security patches to prevent re-exploitation",
-            "Review and update security policies based on incident findings",
-            "Schedule a post-incident review meeting",
-        ])
+        recommendations.extend(
+            [
+                "Change all passwords for potentially compromised accounts",
+                "Apply security patches to prevent re-exploitation",
+                "Review and update security policies based on incident findings",
+                "Schedule a post-incident review meeting",
+            ]
+        )
 
         return recommendations
 
     def save_recovery_report(self, report: dict[str, Any] | None = None) -> Path:
         """
         Save recovery report to JSON file.
-        
+
         Args:
             report: Recovery report (if None, will generate)
-            
+
         Returns:
             Path to saved report file
         """
@@ -383,12 +382,12 @@ class RecoveryManager:
         filename = f"recovery_report_{timestamp}.json"
         filepath = self.recovery_dir / filename
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(report, f, indent=2)
 
         # Also save as latest.json
         latest_path = self.recovery_dir / "latest.json"
-        with open(latest_path, 'w') as f:
+        with open(latest_path, "w") as f:
             json.dump(report, f, indent=2)
 
         logger.info(f"Recovery report saved to {filepath}")
